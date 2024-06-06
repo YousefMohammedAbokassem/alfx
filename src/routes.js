@@ -21,11 +21,15 @@ import Mcq from './pages/Mcq';
 import Live from './pages/Live';
 import Requests from './pages/Requests';
 import Advertise from './pages/Advertise';
+import Category from './pages/Category';
+import GlobalSetting from './pages/GlobalSetting';
+import Recommendation from './pages/recommendationCategory';
+import SpecialCategory from './pages/Recommendation';
+import AboutUs from './pages/AboutUs';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -51,6 +55,11 @@ export default function Router() {
         { path: 'requests', element: <Requests /> },
         { path: 'pos', element: <Pos /> },
         { path: 'advertise', element: <Advertise /> },
+        { path: 'category', element: <Category /> },
+        { path: 'globalsetting', element: <GlobalSetting /> },
+        { path: 'recommendationCategory', element: <Recommendation /> },
+        { path: 'SpecialCategory', element: <SpecialCategory /> },
+        { path: 'aboutUs', element: <AboutUs /> },
       ],
     },
     {

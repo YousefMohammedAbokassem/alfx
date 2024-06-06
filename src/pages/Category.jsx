@@ -29,23 +29,18 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddTeacher from 'src/sections/@dashboard/teacher/AddTeacher';
-import TeacherTableRow from 'src/sections/@dashboard/teacher/TeacherTableRow';
-import { useGetTeacherQuery } from 'src/features/api/apiSlice';
+import AddCategory from 'src/sections/@dashboard/category/AddCategory';
+import CategoryTableRow from 'src/sections/@dashboard/category/CategoryTableRow';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateTeacher from 'src/sections/@dashboard/teacher/UpdateTeacher';
+import UpdateCategory from 'src/sections/@dashboard/category/UpdateCategory';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'phone', label: 'Phone', alignRight: false },
+  { id: 'title', label: 'Title', alignRight: false },
   { id: 'description', label: 'Description', alignRight: false },
-  { id: 'specialization', label: 'Specialization', alignRight: false },
-  { id: 'youtube', label: 'Youtube', alignRight: false },
-  { id: 'telegram', label: 'Telegram', alignRight: false },
-  { id: 'city', label: 'City', alignRight: false },
+  { id: 'image', label: 'image', alignRight: false },
   { id: '' },
 ];
 
@@ -80,7 +75,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Teacher() {
+export default function Category() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -101,10 +96,10 @@ export default function Teacher() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, teacher, id) => {
+  const handleOpenMenu = (event, category, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedTeacher(teacher);
+    setSelectedCategory(category);
     setAnchorEl(event.currentTarget);
   };
 
@@ -147,28 +142,9 @@ export default function Teacher() {
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [teachers, setTeachers] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
-
-  useEffect(() => {
-    setLoadingData(true);
-    axios
-      .get(`${process.env.REACT_APP_API_URL}admin/teachers`, {
-        headers: headerApi(token),
-      })
-      .then((res) => {
-        setTeachers(res.data.teachers);
-        setLoadingData(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          dispatch(logoutUser());
-        }
-        console.log(error);
-        setLoadingData(false);
-      });
-  }, []);
 
   const [OpenAdd, setOpenAdd] = useState(false);
 
@@ -179,42 +155,70 @@ export default function Teacher() {
   const handleDeleteAdmin = () => {
     setDeleteLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_URL}admin/teachers/delete/${selectedList}`, {
+      .get(`${process.env.REACT_APP_API_URL}admin/news/delete/${selectedList}`, {
         headers: headerApi(token),
       })
       .then((res) => {
         setDeleteLoading(false);
-        setTeachers((prev) => prev.filter((el) => el.id !== selectedList));
+        setCategories((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
       })
       .catch((error) => {
         setDeleteLoading(false);
-        console.log(error);
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
       });
   };
+  const fetchData = () => {
+    setLoadingData(true);
+    axios
+      // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
+      .get(`${process.env.REACT_APP_API_URL}admin/news/index`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        setCategories(res.data.news);
+        setLoadingData(false);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
+        setLoadingData(false);
+      });
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedTeacher, setSelectedTeacher] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState({});
 
   const handleUpdate = () => {
     setOpenUpdate(true);
   };
-
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Categories </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Teachers
+          <Typography variant="h4" gutterBottom color={'primary.main'}>
+            News
           </Typography>
-          <Button onClick={() => setOpenAdd(true)} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Teacher
+          <Button
+            onClick={() => setOpenAdd(true)}
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            color={'primary'}
+            sx={{ color: '#fff' }}
+          >
+            new New
           </Button>
         </Stack>
 
@@ -226,7 +230,7 @@ export default function Teacher() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={categories.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -235,11 +239,11 @@ export default function Teacher() {
                   {loadingData ? (
                     <SkeletonTabel number={4} />
                   ) : (
-                    teachers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((teacher, index) => {
+                    categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => {
                       return (
-                        <TeacherTableRow
+                        <CategoryTableRow
                           mainPage={true}
-                          teacher={teacher}
+                          category={category}
                           key={index}
                           handleOpenMenu={handleOpenMenu}
                         />
@@ -283,7 +287,7 @@ export default function Teacher() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={categories.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -301,7 +305,7 @@ export default function Teacher() {
         PaperProps={{
           sx: {
             p: 1,
-            width: 140,
+            width: 'auto',
             '& .MuiMenuItem-root': {
               px: 1,
               typography: 'body2',
@@ -312,7 +316,7 @@ export default function Teacher() {
       >
         <MenuItem onClick={handleUpdate}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Update Teacher
+          Update News
         </MenuItem>
 
         <MenuItem sx={{ color: 'error.main' }} onClick={handleDeleteAdmin}>
@@ -320,12 +324,13 @@ export default function Teacher() {
           {deleteLoading ? <CircularProgress size={20} /> : 'Delete'}
         </MenuItem>
       </Popover>
-      <AddTeacher open={OpenAdd} setOpen={setOpenAdd} setData={setTeachers} handleCloseMenu={handleCloseMenu} />
-      <UpdateTeacher
-        element={selectedTeacher}
+      <AddCategory open={OpenAdd} setOpen={setOpenAdd} setData={setCategories} handleCloseMenu={handleCloseMenu} />
+      <UpdateCategory
+        element={selectedCategory}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setData={setTeachers}
+        setCategories={setCategories}
+        categories={categories}
         handleCloseMenu={handleCloseMenu}
       />
     </>

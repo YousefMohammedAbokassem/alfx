@@ -32,7 +32,7 @@ export default function ProductList({ products, loading, setProducts }) {
             />
           </Grid>
         ))
-       : (
+       : (  
         <Typography variant="h6" sx={{ margin: 'auto' }}>
           There is no product in this category
         </Typography>

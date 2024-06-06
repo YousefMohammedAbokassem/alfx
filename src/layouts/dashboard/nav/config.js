@@ -2,8 +2,6 @@ import SvgColor from '../../../components/svg-color';
 
 const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
-
-
 const navConfig = [
   {
     title: 'dashboard',
@@ -55,6 +53,27 @@ const navConfig = [
     path: '/dashboard/advertise',
     icon: icon('maps-01'),
   },
+  {
+    title: 'News',
+    path: '/dashboard/category',
+    icon: icon('maps-01'),
+  },
+  {
+    title: 'QrCode',
+    path: '/dashboard/globalsetting',
+    icon: icon('maps-01'),
+  },
+  {
+    title: 'Recommendation category',
+    path: '/dashboard/recommendationCategory',
+    icon: icon('maps-01'),
+  },
+  {
+    title: 'About Us',
+    path: '/dashboard/aboutUs',
+    icon: icon('maps-01'),
+  },
+
   {
     title: 'logout',
     path: '/login',

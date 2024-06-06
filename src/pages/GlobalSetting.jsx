@@ -29,23 +29,17 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddTeacher from 'src/sections/@dashboard/teacher/AddTeacher';
-import TeacherTableRow from 'src/sections/@dashboard/teacher/TeacherTableRow';
-import { useGetTeacherQuery } from 'src/features/api/apiSlice';
+import AddGlobalSetting from 'src/sections/@dashboard/globalsetting/AddGlobalSetting';
+import GlobalSettingTableRow from 'src/sections/@dashboard/globalsetting/GlobalSettingTableRow';
+import UpdateGlobalSetting from 'src/sections/@dashboard/globalsetting/UpdateGlobalSetting';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateTeacher from 'src/sections/@dashboard/teacher/UpdateTeacher';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'phone', label: 'Phone', alignRight: false },
-  { id: 'description', label: 'Description', alignRight: false },
-  { id: 'specialization', label: 'Specialization', alignRight: false },
-  { id: 'youtube', label: 'Youtube', alignRight: false },
-  { id: 'telegram', label: 'Telegram', alignRight: false },
-  { id: 'city', label: 'City', alignRight: false },
+  { id: 'key', label: 'Key', alignRight: false },
+  { id: 'value', label: 'Value', alignRight: false },
   { id: '' },
 ];
 
@@ -80,7 +74,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Teacher() {
+export default function GlobalSetting() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -101,10 +95,10 @@ export default function Teacher() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, teacher, id) => {
+  const handleOpenMenu = (event, globalSetting, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedTeacher(teacher);
+    setSelectedGlobalSetting(globalSetting);
     setAnchorEl(event.currentTarget);
   };
 
@@ -147,30 +141,11 @@ export default function Teacher() {
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [teachers, setTeachers] = useState([]);
+  const [globalSettings, setGlobalSettings] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
 
-  useEffect(() => {
-    setLoadingData(true);
-    axios
-      .get(`${process.env.REACT_APP_API_URL}admin/teachers`, {
-        headers: headerApi(token),
-      })
-      .then((res) => {
-        setTeachers(res.data.teachers);
-        setLoadingData(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          dispatch(logoutUser());
-        }
-        console.log(error);
-        setLoadingData(false);
-      });
-  }, []);
-
-  const [OpenAdd, setOpenAdd] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
 
   //handle delete admin
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -179,42 +154,70 @@ export default function Teacher() {
   const handleDeleteAdmin = () => {
     setDeleteLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_URL}admin/teachers/delete/${selectedList}`, {
+      .delete(`${process.env.REACT_APP_API_URL}admin/settings/${selectedList}`, {
         headers: headerApi(token),
       })
       .then((res) => {
         setDeleteLoading(false);
-        setTeachers((prev) => prev.filter((el) => el.id !== selectedList));
+        setGlobalSettings((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
+        // fetchData();
+        
       })
       .catch((error) => {
         setDeleteLoading(false);
-        console.log(error);
+      
       });
   };
+  const fetchData = () => {
+    setLoadingData(true);
+    axios
+      // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
+      .get(`${process.env.REACT_APP_API_URL}admin/settings`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        setGlobalSettings(res.data.data);
+        setLoadingData(false);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
+        setLoadingData(false);
+      });
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedTeacher, setSelectedTeacher] = useState({});
+  const [selectedGlobalSetting, setSelectedGlobalSetting] = useState({});
 
   const handleUpdate = () => {
     setOpenUpdate(true);
   };
-
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Global Settings</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Teachers
+          <Typography variant="h4" gutterBottom color={'primary.main'}>
+            Qr Code
           </Typography>
-          <Button onClick={() => setOpenAdd(true)} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Teacher
+          <Button
+            onClick={() => setOpenAdd(true)}
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            color={'primary'}
+            sx={{ color: '#fff' }}
+          >
+            New QrCode
           </Button>
         </Stack>
 
@@ -226,7 +229,7 @@ export default function Teacher() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={globalSettings.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -235,16 +238,18 @@ export default function Teacher() {
                   {loadingData ? (
                     <SkeletonTabel number={4} />
                   ) : (
-                    teachers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((teacher, index) => {
-                      return (
-                        <TeacherTableRow
-                          mainPage={true}
-                          teacher={teacher}
-                          key={index}
-                          handleOpenMenu={handleOpenMenu}
-                        />
-                      );
-                    })
+                    globalSettings
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((globalSetting, index) => {
+                        return (
+                          <GlobalSettingTableRow
+                            mainPage={true}
+                            globalSetting={globalSetting}
+                            key={index}
+                            handleOpenMenu={handleOpenMenu}
+                          />
+                        );
+                      })
                   )}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
@@ -283,7 +288,7 @@ export default function Teacher() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={globalSettings.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -301,7 +306,7 @@ export default function Teacher() {
         PaperProps={{
           sx: {
             p: 1,
-            width: 140,
+            width: 'auto',
             '& .MuiMenuItem-root': {
               px: 1,
               typography: 'body2',
@@ -312,7 +317,7 @@ export default function Teacher() {
       >
         <MenuItem onClick={handleUpdate}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Update Teacher
+          Update Global Setting
         </MenuItem>
 
         <MenuItem sx={{ color: 'error.main' }} onClick={handleDeleteAdmin}>
@@ -320,12 +325,18 @@ export default function Teacher() {
           {deleteLoading ? <CircularProgress size={20} /> : 'Delete'}
         </MenuItem>
       </Popover>
-      <AddTeacher open={OpenAdd} setOpen={setOpenAdd} setData={setTeachers} handleCloseMenu={handleCloseMenu} />
-      <UpdateTeacher
-        element={selectedTeacher}
+      <AddGlobalSetting
+        open={openAdd}
+        setOpen={setOpenAdd}
+        setData={setGlobalSettings}
+        handleCloseMenu={handleCloseMenu}
+      />
+      <UpdateGlobalSetting
+        element={selectedGlobalSetting}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setData={setTeachers}
+        setGlobalSettings={setGlobalSettings}
+        globalSettings={globalSettings}
         handleCloseMenu={handleCloseMenu}
       />
     </>
