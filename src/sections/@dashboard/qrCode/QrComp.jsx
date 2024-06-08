@@ -18,7 +18,7 @@ import Iconify from 'src/components/iconify';
 import USERLIST from '../../../_mock/user';
 import SkeletonTable from 'src/components/SkeletonTabel';
 import QrTableRow from './QrTableRow';
-import DeleteQr from './DeleteQr';
+import DeleteQr from '../globalsetting/DeleteQr';
 import UpdateQr from './UpdateQr';
 import { ProductFilterSidebar } from '../products';
 

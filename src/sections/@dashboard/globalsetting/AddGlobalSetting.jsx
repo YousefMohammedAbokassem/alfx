@@ -105,12 +105,12 @@ const AddCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
   });
   const [personName, setPersonName] = React.useState([]);
 
-   const handleChange = (event) => {
-     const {
-       target: { value },
-     } = event;
-     setPersonName(value);
-   };
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(value);
+  };
   // const [recommendation, setRecommendation] = useState([]);
   const fetchData = () => {
     // setLoadingData(true);

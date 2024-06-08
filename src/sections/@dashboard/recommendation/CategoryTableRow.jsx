@@ -18,14 +18,24 @@ const CategoryTableRow = ({ category, id, handleDeleteAdmin, loading, handleUpda
   //     navigate(`/dashboard/category/details/${id}`);
   //   }
   // };
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [media, setMedia] = React.useState([
-    ...(category?.images ? JSON.parse(category?.images) : []).map((image) => ({ type: 'image', src: image })),
-    ...(category?.videos ? JSON.parse(category?.videos) : []).map((video) => ({ type: 'video', src: video })),
+    ...(typeof category?.images === 'string'
+      ? JSON.parse(category?.images)
+      : category?.images === 'object'
+      ? category?.images
+      : []
+    ).map((image) => ({ type: 'image', src: image })),
+    ...(typeof category?.videos === 'string'
+      ? JSON.parse(category?.videos)
+      : category?.videos === 'object'
+      ? category?.videos
+      : []
+    ).map((video) => ({ type: 'video', src: video })),
   ]);
   return (
     <Swiper effect={'cards'} grabCursor={true} modules={[EffectCards]} className="mySwiper">
-      {media.map((item, index) => (
+      {media?.map((item, index) => (
         <SwiperSlide
           key={index}
           style={{

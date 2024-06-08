@@ -16,10 +16,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
 
-const UpdateTeacher = ({ idCategory, id, open, setOpen, categories, setCategories, handleCloseMenu, element }) => {
+const UpdateTeacher = ({
+  idCategory,
+  id,
+  open,
+  setOpen,
+  categories,
+  setCategories,
+  handleCloseMenu,
+  element,
+  fetchData,
+}) => {
   const { token } = useSelector((state) => state.auth);
-  console.log(element);
-  console.log(categories);
+  // setCategories([]);
+  // console.log(categories, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
   const handleClose = () => {
     setOpen(false);
     setErrorMessage('');
@@ -71,32 +81,28 @@ const UpdateTeacher = ({ idCategory, id, open, setOpen, categories, setCategorie
   const handleSelectVideo = (e) => {
     setSelectVideo(e.target.files);
   };
-
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}admin/recommendation/index/${id}`, {
-        headers: headerApi(token),
-      });
-      setLoading(false);
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(`${process.env.REACT_APP_API_URL}admin/recommendation/index/${idCategory}`, {
+  //       headers: headerApi(token),
+  //     });
+  //     setLoading(false);
 
-      setCategories(res.data.data);
-      console.log(res.data.data, 'aaaaaaaaaaaaaaaaaaa');
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+  //     setCategories(res.data.data);
+  //     console.log(res.data.data, 'aaaaaaaaaaaaaaaaaaa');
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
   const handleSendApi = () => {
-    console.log(idCategory, 'idCategory');
-    console.log(id, 'id');
     setLoading(true);
     const formData = new FormData();
     formData.append('description', values.description);
     formData.append('recommendation_category_id', idCategory);
-    console.log([...selecteFile]);
 
     [...selecteFile].map((image, i) => {
       formData.append(`images[${i}]`, image);
@@ -109,10 +115,26 @@ const UpdateTeacher = ({ idCategory, id, open, setOpen, categories, setCategorie
         headers: headerApi(token),
       })
       .then((res) => {
-        console.log(res);
         setLoading(false);
         setOpen(false);
         handleCloseMenu();
+        // setCategories((prev) =>
+        //   prev.map((admin) => {
+        //     console.log(admin, 'ASDASDASDASDADADASDASD');
+        //     console.log(prev, 'ASDASDASDASDADADASDASD');
+        //     console.log([...selecteFile], 'JSON.stringify([...selecteFile])');
+        //     if (admin.id == element.id) {
+        //       return {
+        //         ...admin,
+        //         description: values.description,
+        //         images: [],
+        //         videos: [],
+        //       };
+        //     } else {
+        //       return admin;
+        //     }
+        //   })
+        // );
         fetchData();
       })
       .catch((error) => {

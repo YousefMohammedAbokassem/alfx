@@ -34,13 +34,13 @@ const UpdateQr = ({ open, handleClose, setData, element, handleCloseMenu }) => {
 
       axios
         .post(`${process.env.REACT_APP_API_URL}admin/qr_codes/update`, formData, {
-          headers: headerApi(token),
+          headers: headerApi(token)
         })
         .then((res) => {
           setLoading(false);
           setSuccessMessage('Updated Successfuly');
-          handleCloseMenu();
-          handleClose();
+          handleCloseMenu()
+          handleClose()
           setData((prev) =>
             prev.map((admin) =>
               admin.pos.id === element.pos.id
@@ -86,7 +86,7 @@ const UpdateQr = ({ open, handleClose, setData, element, handleCloseMenu }) => {
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}admin/pos`, {
-        headers: headerApi(token),
+        headers: headerApi(token)
       })
       .then((res) => {
         setPos(res.data.pos);
@@ -109,7 +109,7 @@ const UpdateQr = ({ open, handleClose, setData, element, handleCloseMenu }) => {
           <DialogContent>
             <Grid container spacing={3} sx={{ marginTop: '20px' }}>
               <Grid item xs={12} md={6}>
-                <TextField
+              <TextField
                   id="outlined-select-currency"
                   label="User device id"
                   name="user_device_id"
@@ -131,7 +131,8 @@ const UpdateQr = ({ open, handleClose, setData, element, handleCloseMenu }) => {
                   fullWidth
                 >
                   {pos.map((element, index) => (
-                    <MenuItem key={index} value={`${element.id}-${element.name}`}>
+                    <MenuItem key={index} value={`${element.id}-${element.name}`}
+                        >
                       {element.name}
                     </MenuItem>
                   ))}

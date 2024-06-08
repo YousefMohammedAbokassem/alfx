@@ -29,7 +29,7 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddGlobalSetting from 'src/sections/@dashboard/globalsetting/AddGlobalSetting';
+import AddGlobalSetting from 'src/sections/@dashboard/qrCode/AddQr';
 import GlobalSettingTableRow from 'src/sections/@dashboard/globalsetting/GlobalSettingTableRow';
 import UpdateGlobalSetting from 'src/sections/@dashboard/globalsetting/UpdateGlobalSetting';
 import { logoutUser } from 'src/store/authSlice';
@@ -38,11 +38,12 @@ import { headerApi } from 'src/utils/headerApi';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'key', label: 'Key', alignRight: false },
-  { id: 'value', label: 'Value', alignRight: false },
+  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'lectures_count', label: 'Lectures Count', alignRight: false },
+  { id: 'is_free', label: 'Is Free', alignRight: false },
+  { id: 'order', label: 'Order', alignRight: false },
   { id: '' },
 ];
-
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -162,11 +163,9 @@ export default function GlobalSetting() {
         setGlobalSettings((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
         // fetchData();
-        
       })
       .catch((error) => {
         setDeleteLoading(false);
-      
       });
   };
   const fetchData = () => {

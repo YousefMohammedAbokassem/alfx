@@ -250,6 +250,7 @@ export default function Category() {
         handleCloseMenu={handleCloseMenu}
         idCategory={searchParams.get('id')}
         id={selectedList}
+        fetchData={fetchData}
       />
     </>
   );
