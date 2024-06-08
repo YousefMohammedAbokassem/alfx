@@ -149,7 +149,7 @@ const UpdateTeacher = ({ id, open, setOpen, categories, setCategories, handleClo
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color="primary.main">
-          {'Update Category Info'}
+          {'Update AboutUs Info'}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>

@@ -160,7 +160,7 @@ const UpdateTeacher = ({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color="primary.main">
-          {'Update Category Info'}
+          {'Update Recommendation Info'}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>

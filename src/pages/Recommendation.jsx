@@ -21,6 +21,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 // components
+import { useTheme } from '@mui/material/styles';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
@@ -172,6 +173,7 @@ export default function Category() {
   };
   const [searchParams] = useSearchParams();
   console.log(searchParams.get('id'));
+  const theme = useTheme();
   return (
     <>
       <Helmet>
@@ -180,7 +182,19 @@ export default function Category() {
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom color={'primary.main'}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            color={'primary.main'}
+            sx={{
+              [theme.breakpoints.up('sm')]: {
+                fontSize: '18px',
+              },
+              [theme.breakpoints.up('xs')]: {
+                fontSize: '14px',
+              },
+            }}
+          >
             Recommendations
           </Typography>
           <Button
@@ -188,7 +202,15 @@ export default function Category() {
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
             color={'primary'}
-            sx={{ color: '#fff' }}
+            sx={{
+              color: '#fff',
+              [theme.breakpoints.up('sm')]: {
+                fontSize: '16px',
+              },
+              [theme.breakpoints.up('xs')]: {
+                fontSize: '12px',
+              },
+            }}
           >
             new Recommendation
           </Button>

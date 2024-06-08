@@ -21,6 +21,8 @@ import {
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
+import { useTheme } from '@mui/material/styles';
+
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead } from '../sections/@dashboard/user';
@@ -37,10 +39,7 @@ import UpdateCategory from 'src/sections/@dashboard/recommendationCategory/Updat
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: '' },
-];
+const TABLE_HEAD = [{ id: 'name', label: 'Name', alignRight: false }, { id: '' }];
 
 // ----------------------------------------------------------------------
 
@@ -198,6 +197,8 @@ export default function Category() {
   const handleUpdate = () => {
     setOpenUpdate(true);
   };
+  const theme = useTheme();
+
   return (
     <>
       <Helmet>
@@ -206,7 +207,19 @@ export default function Category() {
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom color={'primary.main'}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            color={'primary.main'}
+            sx={{
+              [theme.breakpoints.up('sm')]: {
+                fontSize: '18px',
+              },
+              [theme.breakpoints.up('xs')]: {
+                fontSize: '12px',
+              },
+            }}
+          >
             Recommendation_Categories
           </Typography>
           <Button
@@ -214,7 +227,15 @@ export default function Category() {
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
             color={'primary'}
-            sx={{ color: '#fff' }}
+            sx={{
+              color: '#fff',
+              [theme.breakpoints.up('sm')]: {
+                fontSize: '18px',
+              },
+              [theme.breakpoints.up('xs')]: {
+                fontSize: '12px',
+              },
+            }}
           >
             New Recommendation_Category
           </Button>
@@ -314,7 +335,7 @@ export default function Category() {
       >
         <MenuItem onClick={handleUpdate}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Update News
+          Update Info
         </MenuItem>
 
         <MenuItem sx={{ color: 'error.main' }} onClick={handleDeleteAdmin}>

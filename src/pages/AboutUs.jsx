@@ -166,7 +166,7 @@ export default function Category() {
               <>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                   <Typography variant="h4" gutterBottom>
-                    Admin
+                    AboutUs
                   </Typography>
                 </Stack>
                 {loadingData ? (
@@ -218,7 +218,7 @@ export default function Category() {
         open={openUpdate}
         setOpen={setOpenUpdate}
         setCategories={setCategories}
-        categories={categories} 
+        categories={categories}
         handleCloseMenu={handleCloseMenu}
         // idCategory={searchParams.get('id')}
         id={selectedList}

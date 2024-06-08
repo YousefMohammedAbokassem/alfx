@@ -92,7 +92,7 @@ const AddCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color={'primary.main'}>
-          {'Add Category'}
+          {'Add New'}
         </DialogTitle>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
