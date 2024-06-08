@@ -31,12 +31,12 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddCategory from 'src/sections/@dashboard/recommendation/AddCategory';
-import CategoryTableRow from 'src/sections/@dashboard/recommendation/CategoryTableRow';
+import AddRecommendation from 'src/sections/@dashboard/recommendation/AddRecommendation';
+import RecommendationTableRow from 'src/sections/@dashboard/recommendation/RecommendationTableRow';
+import UpdateRecommendation from 'src/sections/@dashboard/recommendation/UpdateRecommendation';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateCategory from 'src/sections/@dashboard/recommendation/UpdateCategory';
-import SkeletonCopm from 'src/components/skeleton-comp';
+import SkeletonComp from 'src/components/skeleton-comp';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Category() {
+export default function Recommendation() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -94,10 +94,10 @@ export default function Category() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, category, id) => {
+  const handleOpenMenu = (event, recommendation, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedRecommendation(recommendation);
     setAnchorEl(event.currentTarget);
   };
 
@@ -110,7 +110,7 @@ export default function Category() {
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [categories, setCategories] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
 
@@ -128,7 +128,7 @@ export default function Category() {
       })
       .then((res) => {
         setDeleteLoading(false);
-        setCategories((prev) => prev.filter((el) => el.id !== id));
+        setRecommendations((prev) => prev.filter((el) => el.id !== id));
         handleCloseMenu();
         console.log(res);
       })
@@ -147,7 +147,7 @@ export default function Category() {
         headers: headerApi(token),
       })
       .then((res) => {
-        setCategories(res.data.data);
+        setRecommendations(res.data.data);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -164,12 +164,12 @@ export default function Category() {
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedRecommendation, setSelectedRecommendation] = useState({});
 
-  const handleUpdate = (id, category) => {
+  const handleUpdate = (id, recommendation) => {
     setOpenUpdate(true);
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedRecommendation(recommendation);
   };
   const [searchParams] = useSearchParams();
   console.log(searchParams.get('id'));
@@ -177,7 +177,7 @@ export default function Category() {
   return (
     <>
       <Helmet>
-        <title> Categories </title>
+        <title> Recommendations </title>
       </Helmet>
 
       <Container>
@@ -233,18 +233,18 @@ export default function Category() {
                   }}
                 >
                   {loadingData ? (
-                    <SkeletonCopm />
+                    <SkeletonComp />
                   ) : (
-                    categories.map((category, index) => {
+                    recommendations.map((recommendation, index) => {
                       return (
-                        <CategoryTableRow
-                          category={category}
+                        <RecommendationTableRow
+                          recommendation={recommendation}
                           loading={deleteLoading}
                           key={index}
                           id={searchParams.get('id')}
                           handleDeleteAdmin={handleDeleteAdmin}
                           handleUpdate={handleUpdate}
-                          setSelectedCategory={setSelectedCategory}
+                          setSelectedRecommendation={setSelectedRecommendation}
                         />
                       );
                     })
@@ -256,19 +256,19 @@ export default function Category() {
         </>
       </Container>
 
-      <AddCategory
+      <AddRecommendation
         open={OpenAdd}
         id={searchParams.get('id')}
         setOpen={setOpenAdd}
-        setData={setCategories}
+        setData={setRecommendations}
         handleCloseMenu={handleCloseMenu}
       />
-      <UpdateCategory
-        element={selectedCategory}
+      <UpdateRecommendation
+        element={selectedRecommendation}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setCategories={setCategories}
-        categories={categories}
+        setRecommendations={setRecommendations}
+        recommendations={recommendations}
         handleCloseMenu={handleCloseMenu}
         idCategory={searchParams.get('id')}
         id={selectedList}

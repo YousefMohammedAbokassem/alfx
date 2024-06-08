@@ -31,11 +31,11 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddCategory from 'src/sections/@dashboard/recommendationCategory/AddCategory';
-import CategoryTableRow from 'src/sections/@dashboard/recommendationCategory/CategoryTableRow';
+import AddRecommendationCategory from 'src/sections/@dashboard/recommendationCategory/AddRecommendationCategory';
+import RecommendationCategoryTableRow from 'src/sections/@dashboard/recommendationCategory/RecommendationCategoryTableRow';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateCategory from 'src/sections/@dashboard/recommendationCategory/UpdateCategory';
+import UpdateRecommendationCategory from 'src/sections/@dashboard/recommendationCategory/UpdateRecommendationCategory';
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Category() {
+export default function RecommendationCategory() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -93,10 +93,10 @@ export default function Category() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, category, id) => {
+  const handleOpenMenu = (event, recommendationCategory, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedRecommendationCategory(recommendationCategory);
     setAnchorEl(event.currentTarget);
   };
 
@@ -139,7 +139,7 @@ export default function Category() {
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [categories, setCategories] = useState([]);
+  const [recommendationCategories, setRecommendationCategories] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
 
@@ -157,7 +157,7 @@ export default function Category() {
       })
       .then((res) => {
         setDeleteLoading(false);
-        setCategories((prev) => prev.filter((el) => el.id !== selectedList));
+        setRecommendationCategories((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
       })
       .catch((error) => {
@@ -175,7 +175,7 @@ export default function Category() {
         headers: headerApi(token),
       })
       .then((res) => {
-        setCategories(res.data.data);
+        setRecommendationCategories(res.data.data);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -192,7 +192,7 @@ export default function Category() {
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedRecommendationCategory, setSelectedRecommendationCategory] = useState({});
 
   const handleUpdate = () => {
     setOpenUpdate(true);
@@ -202,7 +202,7 @@ export default function Category() {
   return (
     <>
       <Helmet>
-        <title> Categories </title>
+        <title> Recommendation Categories </title>
       </Helmet>
 
       <Container>
@@ -220,7 +220,7 @@ export default function Category() {
               },
             }}
           >
-            Recommendation_Categories
+            Recommendation Categories
           </Typography>
           <Button
             onClick={() => setOpenAdd(true)}
@@ -237,7 +237,7 @@ export default function Category() {
               },
             }}
           >
-            New Recommendation_Category
+            New Recommendation Category
           </Button>
         </Stack>
 
@@ -249,7 +249,7 @@ export default function Category() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={categories.length}
+                  rowCount={recommendationCategories.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -258,16 +258,18 @@ export default function Category() {
                   {loadingData ? (
                     <SkeletonTabel number={4} />
                   ) : (
-                    categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => {
-                      return (
-                        <CategoryTableRow
-                          mainPage={true}
-                          category={category}
-                          key={index}
-                          handleOpenMenu={handleOpenMenu}
-                        />
-                      );
-                    })
+                    recommendationCategories
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((category, index) => {
+                        return (
+                          <RecommendationCategoryTableRow
+                            mainPage={true}
+                            category={category}
+                            key={index}
+                            handleOpenMenu={handleOpenMenu}
+                          />
+                        );
+                      })
                   )}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
@@ -306,7 +308,7 @@ export default function Category() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={categories.length}
+            count={recommendationCategories.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -343,13 +345,18 @@ export default function Category() {
           {deleteLoading ? <CircularProgress size={20} /> : 'Delete'}
         </MenuItem>
       </Popover>
-      <AddCategory open={OpenAdd} setOpen={setOpenAdd} setData={setCategories} handleCloseMenu={handleCloseMenu} />
-      <UpdateCategory
-        element={selectedCategory}
+      <AddRecommendationCategory
+        open={OpenAdd}
+        setOpen={setOpenAdd}
+        setData={setRecommendationCategories}
+        handleCloseMenu={handleCloseMenu}
+      />
+      <UpdateRecommendationCategory
+        element={selectedRecommendationCategory}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setCategories={setCategories}
-        categories={categories}
+        setCategories={setRecommendationCategories}
+        categories={recommendationCategories}
         handleCloseMenu={handleCloseMenu}
       />
     </>

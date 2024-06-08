@@ -12,24 +12,27 @@ import './styles.css';
 
 // import required modules
 import { EffectCards } from 'swiper/modules';
-const CategoryTableRow = ({ category, id, handleDeleteAdmin, loading, handleUpdate, setSelectedCategory }) => {
-  // const handleNavigate = (id) => {
-  //   if (mainPage) {
-  //     navigate(`/dashboard/category/details/${id}`);
-  //   }
-  // };
+
+const RecommendationTableRow = ({
+  recommendation,
+  id,
+  handleDeleteAdmin,
+  loading,
+  handleUpdate,
+  setSelectedRecommendation,
+}) => {
   const navigate = useNavigate();
   const [media, setMedia] = React.useState([
-    ...(typeof category?.images === 'string'
-      ? JSON.parse(category?.images)
-      : category?.images === 'object'
-      ? category?.images
+    ...(typeof recommendation?.images === 'string'
+      ? JSON.parse(recommendation?.images)
+      : recommendation?.images === 'object'
+      ? recommendation?.images
       : []
     ).map((image) => ({ type: 'image', src: image })),
-    ...(typeof category?.videos === 'string'
-      ? JSON.parse(category?.videos)
-      : category?.videos === 'object'
-      ? category?.videos
+    ...(typeof recommendation?.videos === 'string'
+      ? JSON.parse(recommendation?.videos)
+      : recommendation?.videos === 'object'
+      ? recommendation?.videos
       : []
     ).map((video) => ({ type: 'video', src: video })),
   ]);
@@ -60,16 +63,16 @@ const CategoryTableRow = ({ category, id, handleDeleteAdmin, loading, handleUpda
             sx={{ color: 'primary.main', fontSize: '14px', padding: '20px 10px', fontWeight: 'bold' }}
             component="div"
           >
-            Description: {category.description}
+            Description: {recommendation.description}
           </Typography>
           <Typography
             sx={{ color: 'primary.main', fontSize: '14px', padding: '20px 10px', fontWeight: 'bold' }}
             component="div"
           >
-            <Button disabled={loading} variant="text" onClick={() => handleDeleteAdmin(category?.id)}>
+            <Button disabled={loading} variant="text" onClick={() => handleDeleteAdmin(recommendation?.id)}>
               Delete
             </Button>
-            <Button variant="text" onClick={() => handleUpdate(category?.id, category)}>
+            <Button variant="text" onClick={() => handleUpdate(recommendation?.id, recommendation)}>
               Update
             </Button>
           </Typography>
@@ -79,4 +82,4 @@ const CategoryTableRow = ({ category, id, handleDeleteAdmin, loading, handleUpda
   );
 };
 
-export default CategoryTableRow;
+export default RecommendationTableRow;

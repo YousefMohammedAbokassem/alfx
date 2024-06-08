@@ -3,12 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Iconify from 'src/components/iconify';
 
-const CategoryTableRow = ({ category, handleOpenMenu, mainPage }) => {
-  // const handleNavigate = (id) => {
-  //   if (mainPage) {
-  //     navigate(`/dashboard/category/details/${id}`);
-  //   }
-  // };
+const NewTableRow = ({ _new, handleOpenMenu, mainPage }) => {
   const navigate = useNavigate();
   return (
     <TableRow
@@ -16,29 +11,26 @@ const CategoryTableRow = ({ category, handleOpenMenu, mainPage }) => {
       tabIndex={-1}
       role="checkbox"
       sx={{ cursor: mainPage ? 'pointer' : '' }}
-      // onClick={() => handleNavigate(category.id)}
+      // onClick={() => handleNavigate(_new.id)}
     >
       <TableCell component="th" scope="row">
-        {/* <Stack direction="row" alignItems="center" spacing={2}> */}
         <Typography variant="subtitle2" noWrap>
-          {category?.title}
+          {_new?.title}
         </Typography>
-        {/* </Stack> */}
       </TableCell>
 
-      <TableCell align="left">{category?.description}</TableCell>
+      <TableCell align="left">{_new?.description}</TableCell>
       <TableCell align="left">
-        <Avatar alt={category?.title} src={`${process.env.REACT_APP_API_URL_IMAGE}${category?.image}`} />
+        <Avatar alt={_new?.title} src={`${process.env.REACT_APP_API_URL_IMAGE}${_new?.image}`} />
       </TableCell>
 
       <TableCell align="right">
-        <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, category, category.id)}>
+        <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, _new, _new.id)}>
           <Iconify icon={'eva:more-vertical-fill'} />
         </IconButton>
       </TableCell>
-      {/* )} */}
     </TableRow>
   );
 };
 
-export default CategoryTableRow;
+export default NewTableRow;

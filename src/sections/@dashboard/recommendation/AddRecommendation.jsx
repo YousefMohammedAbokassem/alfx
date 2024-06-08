@@ -19,7 +19,7 @@ import { headerApi } from 'src/utils/headerApi';
 
 const rule = ['admin', 'super'];
 
-const AddCategory = ({ open, setOpen, setData, handleCloseMenu, id }) => {
+const AddRecommendation = ({ open, setOpen, setData, handleCloseMenu, id }) => {
   const { token } = useSelector((state) => state.auth);
 
   const [loading, setLoading] = useState(false);
@@ -179,4 +179,4 @@ const AddCategory = ({ open, setOpen, setData, handleCloseMenu, id }) => {
   );
 };
 
-export default AddCategory;
+export default AddRecommendation;

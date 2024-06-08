@@ -16,33 +16,47 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
 
-const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMenu, element }) => {
+const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) => {
   const { token } = useSelector((state) => state.auth);
+
   const handleClose = () => {
     setOpen(false);
     setErrorMessage('');
     setValues({
-      title: '',
+      name: '',
       description: '',
-      image: '',
+      count: '',
+      attribute1: '',
+      attribute2: '',
+      attribute3: '',
+      attribute4: '',
     });
   };
 
   const [values, setValues] = useState({
-    title: '',
+    name: '',
     description: '',
-    image: '',
+    count: '',
+    attribute1: '',
+    attribute2: '',
+    attribute3: '',
+    attribute4: '',
   });
 
   useEffect(() => {
-    if (element) {
+    if (aboutUs) {
       setValues({
-        title: element.title || '',
-        description: element.description || '',
-        image: element.image || '',
+        name: aboutUs.name || '',
+        description: aboutUs.description || '',
+        count: aboutUs.count || '',
+        attribute1: aboutUs.attribute1 || '',
+        attribute2: aboutUs.attribute2 || '',
+        attribute3: aboutUs.attribute3 || '',
+        attribute4: aboutUs.attribute4 || '',
       });
     }
-  }, [element]);
+  }, [aboutUs]);
+
   const handleChange = (e) => {
     setValues((prev) => ({
       ...prev,
@@ -59,15 +73,11 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
     fileInputRef.current.click();
   };
 
-  // const handleSelectFile = (e) => {
-  //   setSelectFile(e.target.files[0]);
-  // };
   const handleSelectFile = (e) => {
-    // if (e.target.files && e.target.files[0]) {
-    setSelectFile(e.target.files[0]);
+    setSelectFile(e.target.files);
     const selectedImage = e.target.files[0];
     const reader = new FileReader();
-    // }
+
     if (selectedImage) {
       reader.onload = function (e) {
         setImageUrl(reader.result);
@@ -78,38 +88,36 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  console.log(categories);
+
   const handleSendApi = () => {
     setLoading(true);
     const formData = new FormData();
-    formData.append('title', values.title);
     formData.append('description', values.description);
-    if (selecteFile !== null) {
-      formData.append('image', selecteFile);
-    }
+    formData.append('name', values.name);
+    formData.append('count', values.count);
+    formData.append('attribute1', values.attribute1);
+    formData.append('attribute2', values.attribute2);
+    formData.append('attribute3', values.attribute3);
+    formData.append('attribute4', values.attribute4);
+
     axios
-      .post(`${process.env.REACT_APP_API_URL}admin/news/update/${element.id}`, formData, {
+      .post(`${process.env.REACT_APP_API_URL}admin/about_us/updateProfile`, formData, {
         headers: headerApi(token),
       })
       .then((res) => {
         setLoading(false);
         setOpen(false);
         handleCloseMenu();
-        setCategories((prev) =>
-          prev.map((admin) => {
-            if (admin.id === element.id) {
-              return {
-                ...admin,
-                title: values.title,
-                description: values.description,
-                // images: [...admin.images, { image: imageUrl }],
-                images: '',
-              };
-            } else {
-              return admin;
-            }
-          })
-        );
+        setAboutUs((prev) => ({
+          ...prev,
+          description: values.description,
+          name: values.name,
+          count: values.count,
+          attribute1: values.attribute1,
+          attribute2: values.attribute2,
+          attribute3: values.attribute3,
+          attribute4: values.attribute4,
+        }));
       })
       .catch((error) => {
         setLoading(false);
@@ -123,7 +131,9 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
         }
       });
   };
+
   const dispatch = useDispatch();
+
   return (
     <>
       <Dialog
@@ -133,50 +143,87 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color="primary.main">
-          {'Update News Info'}
+          {'Update AboutUs Info'}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>
-            <Grid item xs={12} md={6}>
-              {/* <TextField fullWidth label="Name" required name="name" value={values.name} onChange={handleChange} /> */}
+            <Grid item md={6} xs={12}>
               <TextField
                 color="primary"
                 fullWidth
-                label="title"
+                label="Name"
+                name="name"
                 required
-                name="title"
-                value={values.title}
+                value={values.name}
                 onChange={handleChange}
               />
             </Grid>
-            {/* <Grid item xs={12} md={6}>
-              <TextField fullWidth label="City" select name="city_id" value={values.city_id} onChange={handleChange}>
-                {city.map((element, index) => (
-                  <MenuItem key={index} value={element.id}>
-                    {element.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid> */}
-
-            <Grid item xs={12} md={6}>
+            <Grid item md={6} xs={12}>
+              <TextField
+                type="number"
+                color="primary"
+                fullWidth
+                label="Count"
+                name="count"
+                required
+                value={values.count}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 color="primary"
                 fullWidth
                 label="Description"
-                required
                 name="description"
+                required
                 value={values.description}
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
-              <label htmlFor="file">
-                <Button variant="contained" onClick={handleOpenFile} color="primary" sx={{ color: '#fff' }}>
-                  Image
-                </Button>
-              </label>
-              <input id="file" type="file" style={{ display: 'none' }} ref={fileInputRef} onChange={handleSelectFile} />
+            <Grid item xs={12}>
+              <TextField
+                color="primary"
+                fullWidth
+                label="Attribute1"
+                name="attribute1"
+                required
+                value={values.attribute1}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                color="primary"
+                fullWidth
+                label="Attribute2"
+                name="attribute2"
+                required
+                value={values.attribute2}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                color="primary"
+                fullWidth
+                label="Attribute3"
+                name="attribute3"
+                required
+                value={values.attribute3}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                color="primary"
+                fullWidth
+                label="Attribute4"
+                name="attribute4"
+                required
+                value={values.attribute4}
+                onChange={handleChange}
+              />
             </Grid>
           </Grid>
         </DialogContent>
@@ -198,4 +245,4 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
   );
 };
 
-export default UpdateTeacher;
+export default UpdateAboutUs;

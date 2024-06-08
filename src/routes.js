@@ -21,7 +21,7 @@ import Mcq from './pages/Mcq';
 import Live from './pages/Live';
 import Requests from './pages/Requests';
 import Advertise from './pages/Advertise';
-import Category from './pages/Category';
+import Category from './pages/News';
 import GlobalSetting from './pages/GlobalSetting';
 import Recommendation from './pages/recommendationCategory';
 import SpecialCategory from './pages/Recommendation';

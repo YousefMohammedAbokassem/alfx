@@ -29,11 +29,11 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import AddCategory from 'src/sections/@dashboard/category/AddCategory';
-import CategoryTableRow from 'src/sections/@dashboard/category/CategoryTableRow';
+import AddNew from 'src/sections/@dashboard/new/AddNew';
+import NewTableRow from 'src/sections/@dashboard/new/NewTableRow';
+import UpdateNew from 'src/sections/@dashboard/new/UpdateNew';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateCategory from 'src/sections/@dashboard/category/UpdateCategory';
 
 // ----------------------------------------------------------------------
 
@@ -70,12 +70,12 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_new) => _new.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Category() {
+export default function New() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -96,10 +96,10 @@ export default function Category() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, category, id) => {
+  const handleOpenMenu = (event, _new, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedNew(_new);
     setAnchorEl(event.currentTarget);
   };
 
@@ -135,14 +135,14 @@ export default function Category() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredNews = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = !filteredNews.length && !!filterName;
 
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [categories, setCategories] = useState([]);
+  const [news, setNews] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
 
@@ -160,7 +160,7 @@ export default function Category() {
       })
       .then((res) => {
         setDeleteLoading(false);
-        setCategories((prev) => prev.filter((el) => el.id !== selectedList));
+        setNews((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
       })
       .catch((error) => {
@@ -178,7 +178,7 @@ export default function Category() {
         headers: headerApi(token),
       })
       .then((res) => {
-        setCategories(res.data.news);
+        setNews(res.data.news);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -195,7 +195,7 @@ export default function Category() {
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedNew, setSelectedNew] = useState({});
 
   const handleUpdate = () => {
     setOpenUpdate(true);
@@ -203,7 +203,7 @@ export default function Category() {
   return (
     <>
       <Helmet>
-        <title> Categories </title>
+        <title> News </title>
       </Helmet>
 
       <Container>
@@ -218,7 +218,7 @@ export default function Category() {
             color={'primary'}
             sx={{ color: '#fff' }}
           >
-            new New
+            New News
           </Button>
         </Stack>
 
@@ -230,7 +230,7 @@ export default function Category() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={categories.length}
+                  rowCount={news.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -239,15 +239,8 @@ export default function Category() {
                   {loadingData ? (
                     <SkeletonTabel number={4} />
                   ) : (
-                    categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category, index) => {
-                      return (
-                        <CategoryTableRow
-                          mainPage={true}
-                          category={category}
-                          key={index}
-                          handleOpenMenu={handleOpenMenu}
-                        />
-                      );
+                    news.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((_new, index) => {
+                      return <NewTableRow mainPage={true} _new={_new} key={index} handleOpenMenu={handleOpenMenu} />;
                     })
                   )}
                   {emptyRows > 0 && (
@@ -287,7 +280,7 @@ export default function Category() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={categories.length}
+            count={news.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -324,13 +317,13 @@ export default function Category() {
           {deleteLoading ? <CircularProgress size={20} /> : 'Delete'}
         </MenuItem>
       </Popover>
-      <AddCategory open={OpenAdd} setOpen={setOpenAdd} setData={setCategories} handleCloseMenu={handleCloseMenu} />
-      <UpdateCategory
-        element={selectedCategory}
+      <AddNew open={OpenAdd} setOpen={setOpenAdd} setData={setNews} handleCloseMenu={handleCloseMenu} />
+      <UpdateNew
+        element={selectedNew}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setCategories={setCategories}
-        categories={categories}
+        setNews={setNews}
+        news={news}
         handleCloseMenu={handleCloseMenu}
       />
     </>

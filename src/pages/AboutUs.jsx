@@ -32,11 +32,10 @@ import USERLIST from '../_mock/user';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
-import CategoryTableRow from 'src/sections/@dashboard/recommendation/CategoryTableRow';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
-import UpdateCategory from 'src/sections/@dashboard/aboutus/UpdateCategory';
-import SkeletonCopm from 'src/components/skeleton-comp';
+import UpdateAboutUs from 'src/sections/@dashboard/aboutus/UpdateAboutUs';
+import SkeletonComp from 'src/components/skeleton-comp';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Category() {
+export default function AboutUs() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
@@ -92,10 +91,10 @@ export default function Category() {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleOpenMenu = (event, category, id) => {
+  const handleOpenMenu = (event, aboutUs, id) => {
     event.stopPropagation();
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedAboutUs(aboutUs);
     setAnchorEl(event.currentTarget);
   };
 
@@ -108,7 +107,7 @@ export default function Category() {
   // mu update
   const { token } = useSelector((state) => state.auth);
 
-  const [categories, setCategories] = useState([]);
+  const [aboutUs, setAboutUs] = useState([]);
 
   const [loadingData, setLoadingData] = useState(false);
 
@@ -118,7 +117,7 @@ export default function Category() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [selectedList, setSelectedList] = useState('');
-  console.log(categories);
+  console.log(aboutUs);
   const fetchData = () => {
     setLoadingData(true);
     axios
@@ -127,7 +126,7 @@ export default function Category() {
         headers: headerApi(token),
       })
       .then((res) => {
-        setCategories(res.data.data);
+        setAboutUs(res.data.data);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -144,12 +143,12 @@ export default function Category() {
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedAboutUs, setSelectedAboutUs] = useState({});
 
-  const handleUpdate = (id, category) => {
+  const handleUpdate = (id, aboutUs) => {
     setOpenUpdate(true);
     setSelectedList(id);
-    setSelectedCategory(category);
+    setSelectedAboutUs(aboutUs);
   };
   const [searchParams] = useSearchParams();
   console.log(searchParams.get('id'));
@@ -170,38 +169,34 @@ export default function Category() {
                   </Typography>
                 </Stack>
                 {loadingData ? (
-                  <SkeletonCopm />
+                  <SkeletonComp />
                 ) : (
                   <Card sx={{ maxWidth: 345 }}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
-                        <strong>Name:</strong> {categories.name}
+                        <strong>Name:</strong> {aboutUs.name}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Description:</strong> {categories.description}
+                        <strong>Description:</strong> {aboutUs.description}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute1:</strong> {categories.attribute1}
+                        <strong>Attribute1:</strong> {aboutUs.attribute1}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute2:</strong> {categories.attribute2}
+                        <strong>Attribute2:</strong> {aboutUs.attribute2}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute3:</strong> {categories.attribute3}
+                        <strong>Attribute3:</strong> {aboutUs.attribute3}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute4:</strong> {categories.attribute4}
+                        <strong>Attribute4:</strong> {aboutUs.attribute4}
                       </Typography>
                       <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Count:</strong> {categories.count}
+                        <strong>Count:</strong> {aboutUs.count}
                       </Typography>
                     </CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'start', mb: 2, p: 2 }}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleUpdate(categories.id, categories)}
-                      >
+                      <Button variant="contained" color="primary" onClick={() => handleUpdate(aboutUs.id, aboutUs)}>
                         Update
                       </Button>
                     </Box>
@@ -213,14 +208,14 @@ export default function Category() {
         </>
       </Container>
 
-      <UpdateCategory
-        element={selectedCategory}
+      <UpdateAboutUs
+        element={selectedAboutUs}
         open={openUpdate}
         setOpen={setOpenUpdate}
-        setCategories={setCategories}
-        categories={categories}
+        setAboutUs={setAboutUs}
+        aboutUs={aboutUs}
         handleCloseMenu={handleCloseMenu}
-        // idCategory={searchParams.get('id')}
+        // idAboutUs={searchParams.get('id')}
         id={selectedList}
       />
     </>

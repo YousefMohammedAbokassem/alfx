@@ -1,35 +1,25 @@
 import { LoadingButton } from '@mui/lab';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  MenuItem,
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
 
-const UpdateTeacher = ({
+const UpdateRecommendation = ({
   idCategory,
   id,
   open,
   setOpen,
-  categories,
-  setCategories,
+  recommendations,
+  setRecommendations,
   handleCloseMenu,
   element,
   fetchData,
 }) => {
   const { token } = useSelector((state) => state.auth);
-  // setCategories([]);
-  // console.log(categories, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
+  // إغلاق الحوار وإعادة تعيين القيم
   const handleClose = () => {
     setOpen(false);
     setErrorMessage('');
@@ -40,12 +30,22 @@ const UpdateTeacher = ({
     });
   };
 
+  // حالة القيم للتوصية
   const [values, setValues] = useState({
     name: '',
     description: '',
     image: '',
   });
 
+  // ملف الصورة
+  const fileInputRef = useRef(null);
+  const [selecteFile, setSelectFile] = useState([]);
+
+  // ملف الفيديو
+  const videoRef = useRef(null);
+  const [selecteVideo, setSelectVideo] = useState([]);
+
+  // تحديث قيم التوصية عند تغيير العنصر
   useEffect(() => {
     if (element) {
       setValues({
@@ -55,6 +55,8 @@ const UpdateTeacher = ({
       });
     }
   }, [element]);
+
+  // تغيير قيم التوصية
   const handleChange = (e) => {
     setValues((prev) => ({
       ...prev,
@@ -62,42 +64,33 @@ const UpdateTeacher = ({
     }));
   };
 
-  // handle file
-  const fileInputRef = useRef(null);
-  const [selecteFile, setSelectFile] = useState([]);
-  const videoRef = useRef(null);
-  const [selecteVideo, setSelectVideo] = useState([]);
+  // فتح حوار اختيار الصورة
   const handleOpenFile = () => {
     fileInputRef.current.click();
   };
+
+  // فتح حوار اختيار الفيديو
   const handleOpenVideo = () => {
     videoRef.current.click();
   };
 
+  // اختيار الصورة
   const handleSelectFile = (e) => {
     setSelectFile(e.target.files);
   };
 
+  // اختيار الفيديو
   const handleSelectVideo = (e) => {
     setSelectVideo(e.target.files);
   };
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(`${process.env.REACT_APP_API_URL}admin/recommendation/index/${idCategory}`, {
-  //       headers: headerApi(token),
-  //     });
-  //     setLoading(false);
 
-  //     setCategories(res.data.data);
-  //     console.log(res.data.data, 'aaaaaaaaaaaaaaaaaaa');
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
+  // حالة التحميل
+  const [loading, setLoading] = useState(false);
+
+  // رسالة الخطأ
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // إرسال البيانات إلى الخادم
   const handleSendApi = () => {
     setLoading(true);
     const formData = new FormData();
@@ -118,28 +111,10 @@ const UpdateTeacher = ({
         setLoading(false);
         setOpen(false);
         handleCloseMenu();
-        // setCategories((prev) =>
-        //   prev.map((admin) => {
-        //     console.log(admin, 'ASDASDASDASDADADASDASD');
-        //     console.log(prev, 'ASDASDASDASDADADASDASD');
-        //     console.log([...selecteFile], 'JSON.stringify([...selecteFile])');
-        //     if (admin.id == element.id) {
-        //       return {
-        //         ...admin,
-        //         description: values.description,
-        //         images: [],
-        //         videos: [],
-        //       };
-        //     } else {
-        //       return admin;
-        //     }
-        //   })
-        // );
         fetchData();
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
         if (error.response) {
           setErrorMessage(error.response.data.message);
         } else {
@@ -150,7 +125,9 @@ const UpdateTeacher = ({
         }
       });
   };
+
   const dispatch = useDispatch();
+
   return (
     <>
       <Dialog
@@ -225,4 +202,4 @@ const UpdateTeacher = ({
   );
 };
 
-export default UpdateTeacher;
+export default UpdateRecommendation;
