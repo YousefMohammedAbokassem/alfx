@@ -55,7 +55,7 @@ const navConfig = [
   },
   {
     title: 'News',
-    path: '/dashboard/category',
+    path: '/dashboard/news',
     icon: icon('maps-01'),
   },
   {

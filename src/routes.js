@@ -21,7 +21,7 @@ import Mcq from './pages/Mcq';
 import Live from './pages/Live';
 import Requests from './pages/Requests';
 import Advertise from './pages/Advertise';
-import Category from './pages/News';
+import News from './pages/News';
 import GlobalSetting from './pages/GlobalSetting';
 import Recommendation from './pages/recommendationCategory';
 import SpecialCategory from './pages/Recommendation';
@@ -55,7 +55,7 @@ export default function Router() {
         { path: 'requests', element: <Requests /> },
         { path: 'pos', element: <Pos /> },
         { path: 'advertise', element: <Advertise /> },
-        { path: 'category', element: <Category /> },
+        { path: 'news', element: <News /> },
         { path: 'globalsetting', element: <GlobalSetting /> },
         { path: 'recommendationCategory', element: <Recommendation /> },
         { path: 'SpecialCategory', element: <SpecialCategory /> },
