@@ -18,8 +18,6 @@ import Items from './pages/Items';
 import Pos from './pages/Pos';
 import User from './pages/User';
 import Mcq from './pages/Mcq';
-import Live from './pages/Live';
-import Requests from './pages/Requests';
 import Advertise from './pages/Advertise';
 import News from './pages/News';
 import GlobalSetting from './pages/GlobalSetting';
@@ -51,8 +49,6 @@ export default function Router() {
         { path: 'courses/lectures/mcq/:id', element: <Mcq /> },
         { path: 'admin', element: <Admin /> },
         { path: 'items', element: <Items /> },
-        { path: 'live', element: <Live /> },
-        { path: 'requests', element: <Requests /> },
         { path: 'pos', element: <Pos /> },
         { path: 'advertise', element: <Advertise /> },
         { path: 'news', element: <News /> },

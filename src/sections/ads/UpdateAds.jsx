@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { headerApi } from 'src/utils/headerApi';
 
 const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
-    const {token} = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,10 +14,14 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
 
   useEffect(() => {
     if (selectedElement) {
       setUrl(selectedElement.url);
+      setTitle(selectedElement.title);
+      setBody(selectedElement.body);
     }
   }, [selectedElement]);
 
@@ -34,7 +38,7 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     console.log(url);
     console.log(selecteFile);
 
@@ -42,42 +46,46 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
     const formData = new FormData();
 
     formData.append('url', url);
+    formData.append('title', title);
+    formData.append('body', body);
     formData.append('image', selecteFile);
     formData.append('id', selectedElement.id);
 
-    axios.post(`${process.env.REACT_APP_API_URL}admin/ads/update`,formData, {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}admin/ads/update`, formData, {
         headers: headerApi(token),
-    })
-    .then(res => {
-      console.log(res)
-        handleClose()
+      })
+      .then((res) => {
+        console.log(res);
+        handleClose();
         setLoading(false);
         setData((prev) =>
-        prev.map((ads) =>
-          ads.id === selectedElement.id
-            ? {
-              ...ads,
-              image: res.data.ad.image,
-              url: res.data.ad.url
-              }
-            : ads
-        )
-      );
-    })
-    .catch(err => {
-        console.log(err)
-        setLoading(false)
-        if(err.response.status === 400) {
-            console.log("hello")
-            setErrorMessage(err.response.data.error)
-        }else{
-            setErrorMessage("Error, please try again")
+          prev.map((ads) =>
+            ads.id === selectedElement.id
+              ? {
+                  ...ads,
+                  image: selecteFile,
+                  url: res.data.ad.url,
+                  title: title,
+                  body: body,
+                }
+              : ads
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        if (err.response.status === 400) {
+          console.log('hello');
+          setErrorMessage(err.response.data.error);
+        } else {
+          setErrorMessage('Error, please try again');
         }
-    })
+      });
   };
 
-
-  console.log(errorMessage)
+  console.log(errorMessage);
   return (
     <>
       <Dialog
@@ -86,10 +94,30 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Update Password'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Update Advertise'}</DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container spacing={3} sx={{ marginTop: '20px' }}>
+              <Grid item xs={12} md={12}>
+                <TextField
+                  fullWidth
+                  label="Title"
+                  name="title"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <TextField
+                  fullWidth
+                  label="Body"
+                  name="body"
+                  required
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                />
+              </Grid>
               <Grid item xs={12} md={12}>
                 <TextField
                   fullWidth

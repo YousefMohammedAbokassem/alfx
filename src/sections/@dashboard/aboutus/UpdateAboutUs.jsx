@@ -185,7 +185,7 @@ const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) 
               <TextField
                 color="primary"
                 fullWidth
-                label="Attribute1"
+                label="Founder"
                 name="attribute1"
                 required
                 value={values.attribute1}
@@ -196,7 +196,7 @@ const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) 
               <TextField
                 color="primary"
                 fullWidth
-                label="Attribute2"
+                label="Experience"
                 name="attribute2"
                 required
                 value={values.attribute2}
@@ -207,7 +207,7 @@ const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) 
               <TextField
                 color="primary"
                 fullWidth
-                label="Attribute3"
+                label="The best coach"
                 name="attribute3"
                 required
                 value={values.attribute3}
@@ -218,7 +218,7 @@ const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) 
               <TextField
                 color="primary"
                 fullWidth
-                label="Attribute4"
+                label="Address"
                 name="attribute4"
                 required
                 value={values.attribute4}

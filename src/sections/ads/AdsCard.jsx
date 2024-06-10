@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardMedia } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import React from 'react';
 
 const AdsCard = ({ element, setOpenDelete, setSelectedElement, setOpenUpdate }) => {
@@ -16,7 +16,7 @@ const AdsCard = ({ element, setOpenDelete, setSelectedElement, setOpenUpdate }) 
   const handleUpdate = () => {
     setOpenUpdate(true);
     setSelectedElement(element);
-  }
+  };
   return (
     <>
       <Card sx={{ width: 345 }}>
@@ -26,6 +26,11 @@ const AdsCard = ({ element, setOpenDelete, setSelectedElement, setOpenUpdate }) 
           title="Advertise"
           onClick={onClick}
         />
+        <CardContent>
+          <Typography>Title: {element?.title}</Typography>
+          <Typography>Body: { element?.body}</Typography>
+          <Typography>Url: {element?.url}</Typography>
+        </CardContent>
         <CardActions>
           <Button size="small" onClick={handleUpdate}>
             update

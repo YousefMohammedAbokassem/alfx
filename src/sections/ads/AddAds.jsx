@@ -15,13 +15,16 @@ const AddAds = ({ open, setOpen, setData }) => {
   const [successMessage, setSuccessMessage] = useState(null);
 
   const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
 
   const handleClose = () => {
     setOpen(false);
     setErrorMessage('');
     setSuccessMessage('');
     setUrl('');
-    
+    setBody('');
+    setTitle('');
   };
 
   //handle file
@@ -43,6 +46,8 @@ const AddAds = ({ open, setOpen, setData }) => {
 
     formData.append('image', selecteFile);
     formData.append('url', url);
+    formData.append('title', title);
+    formData.append('body', body);
 
     axios
       .post(`${process.env.REACT_APP_API_URL}admin/ads/create`, formData, {
@@ -52,9 +57,9 @@ const AddAds = ({ open, setOpen, setData }) => {
         console.log(res);
         setLoading(false);
         setData((prev) => [...prev, res.data.ad]);
-        setOpen(false)
-        setErrorMessage(null)
-        setSuccessMessage(null)
+        setOpen(false);
+        setErrorMessage(null);
+        setSuccessMessage(null);
       })
       .catch((error) => {
         console.log(error);
@@ -79,6 +84,18 @@ const AddAds = ({ open, setOpen, setData }) => {
           <DialogTitle id="alert-dialog-title">{'Add Advertise'}</DialogTitle>
           <DialogContent>
             <Grid container spacing={3} sx={{ marginTop: '20px' }}>
+              <Grid item xs={12} md={12}>
+                <TextField
+                  fullWidth
+                  label="Title"
+                  name="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <TextField fullWidth label="Body" name="Body" value={body} onChange={(e) => setBody(e.target.value)} />
+              </Grid>
               <Grid item xs={12} md={12}>
                 <TextField fullWidth label="Url" name="url" value={url} onChange={(e) => setUrl(e.target.value)} />
               </Grid>

@@ -9,18 +9,8 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('ic_user'),
-  },
-  {
-    title: 'admin',
-    path: '/dashboard/admin',
-    icon: icon('user-01'),
-  },
-  {
-    title: 'Teacher',
-    path: '/dashboard/teacher',
+    title: 'User',
+    path: '/dashboard/User',
     icon: icon('teacher-01'),
   },
   {
@@ -31,47 +21,38 @@ const navConfig = [
   {
     title: 'Cities',
     path: '/dashboard/items',
-    icon: icon('maps-01'),
+    icon: icon('city-svgrepo-com'),
   },
   {
     title: 'Pos',
     path: '/dashboard/pos',
     icon: icon('maps-01'),
   },
-  {
-    title: 'Live',
-    path: '/dashboard/live',
-    icon: icon('maps-01'),
-  },
-  {
-    title: 'Requests',
-    path: '/dashboard/requests',
-    icon: icon('maps-01'),
-  },
+
   {
     title: 'Advertise',
     path: '/dashboard/advertise',
-    icon: icon('maps-01'),
+    icon: icon('ad-free-svgrepo-com'),
   },
   {
     title: 'News',
     path: '/dashboard/news',
-    icon: icon('maps-01'),
+    icon: icon('news-svgrepo-com'),
   },
   {
     title: 'QrCode',
     path: '/dashboard/globalsetting',
-    icon: icon('maps-01'),
+    icon: icon('qrcode-svgrepo-com'),
   },
   {
     title: 'Recommendation category',
     path: '/dashboard/recommendationCategory',
-    icon: icon('maps-01'),
+    icon: icon('passport-svgrepo-com'),
   },
   {
     title: 'About Us',
     path: '/dashboard/aboutUs',
-    icon: icon('maps-01'),
+    icon: icon('about-svgrepo-com'),
   },
 
   {

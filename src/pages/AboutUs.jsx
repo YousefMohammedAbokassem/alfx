@@ -171,31 +171,67 @@ export default function AboutUs() {
                 {loadingData ? (
                   <SkeletonComp />
                 ) : (
-                  <Card sx={{ maxWidth: 345 }}>
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        <strong>Name:</strong> {aboutUs.name}
+                  <Card sx={{ width: '100%' }}>
+                    <CardContent sx={{ display: 'flex', justifyContent: 'end', flexDirection: 'column' }}>
+                      <Typography
+                        sx={{ display: 'flex', justifyContent: 'end' }}
+                        gutterBottom
+                        variant="h5"
+                        component="div"
+                      >
+                        {aboutUs.name}
+                        <strong> : الاسم</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Description:</strong> {aboutUs.description}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.description}
+                        <strong> : الوصف</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute1:</strong> {aboutUs.attribute1}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.attribute1}
+                        <strong> : منشئ الؤسسة</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute2:</strong> {aboutUs.attribute2}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.attribute2}
+                        <strong> : الخبرة</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute3:</strong> {aboutUs.attribute3}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.attribute3}
+                        <strong> : أفضل مدرب</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Attribute4:</strong> {aboutUs.attribute4}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.attribute4}
+                        <strong> : العنوان</strong>
                       </Typography>
-                      <Typography variant="body2" color="text.main" sx={{ fontSize: '1.2rem' }}>
-                        <strong>Count:</strong> {aboutUs.count}
+                      <Typography
+                        variant="body2"
+                        color="text.main"
+                        sx={{ fontSize: '0.9rem', display: 'flex', justifyContent: 'end' }}
+                      >
+                        {aboutUs.count}
+                        <strong> : العدد</strong>
                       </Typography>
                     </CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'start', mb: 2, p: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'end', mb: 2, p: 2 }}>
                       <Button variant="contained" color="primary" onClick={() => handleUpdate(aboutUs.id, aboutUs)}>
                         Update
                       </Button>
