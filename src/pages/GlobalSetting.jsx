@@ -199,7 +199,6 @@ export default function GlobalSetting() {
       })
       .then((res) => {
         setGlobalSettings(res.data.qr_codes);
-        console.log(res.data.qr_codes);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -219,8 +218,6 @@ export default function GlobalSetting() {
         setFilterCoursesData(res.data.courses);
         setFilterPosesData(res.data.poses);
         // setGlobalSettings(res.data.qr_codes);
-        console.log(res, 'dddddddddddddddddddddddddddddddddd');
-        console.log(res.data.qr_codes);
         // setLoadingData(false);
       })
       .catch((error) => {
@@ -240,16 +237,10 @@ export default function GlobalSetting() {
 
     axios
       .post(`${process.env.REACT_APP_API_URL}admin/qr_codes/filter?page=${currentPage}`, data, {
-        headers: {
-          ...headerApi(token),
-          'Content-Type': 'application/json', // تأكد من تعيين نوع المحتوى إلى JSON
-        },
+        headers: headerApi(token),
       })
       .then((res) => {
         setGlobalSettings(res.data.data);
-        console.log(filterCourses, 'dddddddddddddddddddddddddddddddddd');
-        console.log(filterPos, 'dddddddddddddddddddddddddddddddddd');
-        console.log(res.data.data);
         setLoadingData(false);
       })
       .catch((error) => {
