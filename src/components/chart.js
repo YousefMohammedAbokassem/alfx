@@ -10,6 +10,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SkeletonCharts from './SkeletonCharts';
+import { logoutUser } from 'src/store/authSlice';
+import { headerApi } from 'src/utils/headerApi';
+import axios from 'axios';
 
 const chartSetting = {
   height: 300,
@@ -108,6 +111,122 @@ export default function GridDemo() {
   ]);
 
   const [stat, setStat] = useState(dataSet);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios
+        // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
+        .get(`${process.env.REACT_APP_API_URL}admin/statistics/${selectedYear || new Date().getFullYear()}`, {
+          headers: headerApi(token),
+        });
+      setDataSet(res.data);
+      setStat(res.data);
+      setLoading(false);
+
+      // setStat(res.data.statistics);
+      // const arr = res.data.statistics;
+
+      /*   if (res.data.statistics[0] != undefined) {
+        setStat(
+          (
+            prev //[a,b] [c,d]
+          ) =>
+            prev.map((ele) => {
+              let data = {};
+              res.data.statistics.forEach((elementFromFetch) => {
+                if (ele?.month === elementFromFetch?.month) {
+                  data = elementFromFetch;
+                } else {
+                  data = ele;
+                }
+              });
+              return data;
+            })
+        );
+        setLoading(false);
+      } else {
+        setLoading(false);
+        setStat([
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Jan',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Fev',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Mar',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Apr',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'May',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'June',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'July',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Aug',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Sept',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Oct',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Nov',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Dec',
+          },
+        ]);
+      } */
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch(logoutUser());
+      }
+      setLoading(false);
+    }
+    // setSelectedYear('');
+  };
+
+  // handle year
+  const [selectedYear, setSelectedYear] = useState('');
+
+  const handleYearChange = (date) => {
+    setSelectedYear(date.$y);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.auth);
 
@@ -115,9 +234,9 @@ export default function GridDemo() {
     // No need to fetch data, using default data
   }, []);
 
-  const handleYearChange = (date) => {
-    // No need to handle year change as we're using default data for a specific year
-  };
+  // const handleYearChange = (date) => {
+  //   // No need to handle year change as we're using default data for a specific year
+  // };
 
   const [showTeacher, setShowTeacher] = useState(true);
   const [showStudent, setShowStudent] = useState(true);
@@ -228,7 +347,7 @@ export default function GridDemo() {
               <DatePicker
                 views={['year']}
                 label="Select Year"
-                value={{ $y: 2024 }} // Setting year to 2024
+                // value={{ $y: 2024 }} // Setting year to 2024
                 onChange={handleYearChange}
                 color="primary"
                 sx={{
@@ -248,12 +367,13 @@ export default function GridDemo() {
 
             <Grid item>
               <Button
-                disabled={true} // No need for this button as we're using default data
+                disabled={selectedYear === '' ? true : false} // No need for this button as we're using default data
                 color="warning"
                 sx={{ height: '100%' }}
                 variant="outlined"
                 onClick={() => {
                   // No need for this button as we're using default data
+                  fetchData();
                 }}
               >
                 get year
@@ -269,7 +389,7 @@ export default function GridDemo() {
                 {
                   scaleType: 'band',
                   dataKey: 'month',
-                  valueFormatter: (month, context) => `${month}\n${2024}`, // Using 2024 as the year
+                  valueFormatter: (month, context) => `${month}\n${selectedYear|| new Date().getFullYear()}`, // Using 2024 as the year
                 },
               ]}
               series={series}

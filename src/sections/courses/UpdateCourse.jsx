@@ -57,8 +57,8 @@ const UpdateCourse = ({ element, open, handleClose, onUpdateSuccess }) => {
         .then((res) => {
           setLoading(false);
           setSuccessMessage('Updated Successfuly');
-          onUpdateSuccess(res.data.course);
           handleClose();
+          onUpdateSuccess(res.data.course);
         })
         .catch((error) => {
           console.log(error);

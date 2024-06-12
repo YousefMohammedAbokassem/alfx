@@ -3,6 +3,7 @@ import {
   CircularProgress,
   Container,
   MenuItem,
+  Pagination,
   Popover,
   Table,
   TableBody,
@@ -105,7 +106,7 @@ const QrComp = ({ QrLoading, setQrLoading, qrCode, setQrCode, setSelectedId, sel
                     <SkeletonTable number={4} />
                   ) : (
                     qrCode
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((element, index) => (
                         <QrTableRow
                           key={index}
@@ -119,15 +120,7 @@ const QrComp = ({ QrLoading, setQrLoading, qrCode, setQrCode, setSelectedId, sel
               </Table>
             </TableContainer>
           </Scrollbar>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50, 100]}
-            component="div"
-            count={USERLIST.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <Pagination count={10} color="primary" />
         </Card>
       </Container>
       <Popover

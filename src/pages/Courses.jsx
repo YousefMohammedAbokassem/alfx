@@ -13,7 +13,7 @@ import { headerApi } from 'src/utils/headerApi';
 import { logoutUser } from 'src/store/authSlice';
 
 const Courses = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const [openAdd, setOpenAdd] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const Courses = () => {
   // handle update dialog
   const [openUpdate, setOpenUpdate] = useState(false);
 
-  const [selectedUpdate, setSelectedUpdate] = useState({})
+  const [selectedUpdate, setSelectedUpdate] = useState({});
 
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
@@ -44,19 +44,11 @@ const Courses = () => {
 
   const handleUpdate = (element) => {
     setOpenUpdate(true);
-    setSelectedUpdate(element)
+    setSelectedUpdate(element);
   };
 
-
   const handleUpdateSuccess = (updatedElement) => {
-    const updatedElements = courses.map((el) => {
-      if (el.id === updatedElement.id) {
-        return updatedElement;
-      }
-      return el;
-    });
-  
-    setCourses(updatedElements);
+    fetchData();
   };
 
   //handle pagination
@@ -71,7 +63,7 @@ const Courses = () => {
     localStorage.setItem('currentPage', page.toString());
   }, [page]);
 
-  useEffect(() => {
+  const fetchData = () => {
     setLoading(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}admin/courses?page=${page}`, {
@@ -84,11 +76,14 @@ const Courses = () => {
       })
       .catch((error) => {
         console.log(error);
-        if(error.response.status === 401){
-          dispatch(logoutUser())
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
         }
         setLoading(false);
       });
+  };
+  useEffect(() => {
+    fetchData();
   }, [page, token]);
 
   return (
@@ -121,12 +116,23 @@ const Courses = () => {
           )}
         </div>
         <Stack sx={{ marginTop: '50px', justifyContent: 'center', alignItems: 'center' }} spacing={2}>
-          <Pagination page={page} onChange={(e, value) => setPage(value)} count={pagesCount} variant="outlined" shape="rounded" />
+          <Pagination
+            page={page}
+            onChange={(e, value) => setPage(value)}
+            count={pagesCount}
+            variant="outlined"
+            shape="rounded"
+          />
         </Stack>
       </Container>
-      <AddCourses open={openAdd} setOpen={setOpenAdd} setData={setCourses} />
+      <AddCourses fetchData={fetchData} open={openAdd} setOpen={setOpenAdd} setData={setCourses} />
       <DeleteCourse open={openDelete} handleClose={handleClose} id={selectedDelete} setData={setCourses} />
-      <UpdateCourse onUpdateSuccess={handleUpdateSuccess} element={selectedUpdate} open={openUpdate} handleClose={handleCloseUpdate} />
+      <UpdateCourse
+        onUpdateSuccess={handleUpdateSuccess}
+        element={selectedUpdate}
+        open={openUpdate}
+        handleClose={handleCloseUpdate}
+      />
     </>
   );
 };

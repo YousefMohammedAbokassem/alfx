@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { headerApi } from 'src/utils/headerApi';
 
-const AddCourses = ({ open, setOpen, setData }) => {
+const AddCourses = ({ open, setOpen, setData, fetchData }) => {
   const { token } = useSelector((state) => state.auth);
 
   const [loading, setLoading] = useState(false);
@@ -32,14 +32,14 @@ const AddCourses = ({ open, setOpen, setData }) => {
     setSuccessMessage('');
   };
 
-  const dialogRef = useRef(null)
+  const dialogRef = useRef(null);
 
   const scrollToBottom = () => {
-    dialogRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    dialogRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToBottom();
   }, [errorMessage]);
 
   const formik = useFormik({
@@ -73,14 +73,14 @@ const AddCourses = ({ open, setOpen, setData }) => {
         setLoading(true);
         axios
           .post(`${process.env.REACT_APP_API_URL}admin/courses/create`, formData, {
-            headers: headerApi(token)
+            headers: headerApi(token),
           })
           .then((res) => {
             setSuccessMessage('Added success');
             setErrorMessage('');
             setLoading(false);
-            setOpen(false)
-            setData((prev) => [...prev, res.data.course])();
+            setOpen(false);
+            fetchData();
           })
           .catch((error) => {
             console.log(error);
@@ -88,14 +88,12 @@ const AddCourses = ({ open, setOpen, setData }) => {
             setErrorMessage(error.response.data.error);
             setSuccessMessage('');
           });
-      }else{
-        setErrorMessage("Please select file")
-        dialogRef.scrollTop = dialogRef.scrollHeight
+      } else {
+        setErrorMessage('Please select file');
+        dialogRef.scrollTop = dialogRef.scrollHeight;
       }
     },
   });
-
-  
 
   // handle image
   const fileInputRef = useRef(null);

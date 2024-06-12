@@ -38,7 +38,7 @@ const recommendationOptions = [
   { name: 'False', value: 0 },
 ];
 
-const AddQrOrCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
+const AddQrOrCategory = ({ open, setOpen, setData, handleCloseMenu, fetchAllData }) => {
   const { id } = useParams();
   const { token } = useSelector((state) => state.auth);
   const [searchParams] = useSearchParams();
@@ -64,7 +64,29 @@ const AddQrOrCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
     setSuccessMessage('');
     handleCloseMenu && handleCloseMenu();
   };
+  const downloadZipFile = async (url, token) => {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/zip',
+        },
+        responseType: 'blob', // مهم لتنزيل الملفات الثنائية (binary files)
+      });
 
+      // قم بإنشاء رابط تنزيل وتنزيل الملف
+      const blob = new Blob([response.data], { type: 'application/zip' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'yourfile.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed', error);
+      // التعامل مع الأخطاء هنا
+    }
+  };
   const handleAddQr = () => {
     setLoading(true);
 
@@ -84,21 +106,19 @@ const AddQrOrCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
         headers: headerApi(token),
       })
       .then((res) => {
-        setOpen(false);
         setSelectedPos('');
         setQrCount('');
-        axios
-          .get(`${process.env.REACT_APP_API_URL}admin/qr_codes/course/${id}`, {
-            headers: headerApi(token),
-          })
-          .then((res) => {
-            setLoading(false);
-            setData(res.data.qr_codes);
-          })
-          .catch((error) => {
-            console.log(error);
-            setLoading(false);
-          });
+        console.log(res.data.url);
+        const link = document.createElement('a');
+        link.href = res.data.url;
+        link.download = 'yourfile.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setOpen(false);
+        setLoading(false);
+
+        fetchAllData();
       })
       .catch((error) => {
         console.log(error);

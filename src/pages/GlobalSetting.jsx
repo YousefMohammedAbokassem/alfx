@@ -18,6 +18,7 @@ import {
   TableContainer,
   TablePagination,
   CircularProgress,
+  Pagination,
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
@@ -30,7 +31,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import SkeletonTabel from 'src/components/SkeletonTabel';
 import AddGlobalSetting from 'src/sections/@dashboard/qrCode/AddQr';
-import GlobalSettingTableRow from 'src/sections/@dashboard/globalsetting/GlobalSettingTableRow';
+import QrTableRow from 'src/sections/@dashboard/globalsetting/QrTableRow';
 import UpdateGlobalSetting from 'src/sections/@dashboard/globalsetting/UpdateGlobalSetting';
 import { logoutUser } from 'src/store/authSlice';
 import { headerApi } from 'src/utils/headerApi';
@@ -38,10 +39,9 @@ import { headerApi } from 'src/utils/headerApi';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'lectures_count', label: 'Lectures Count', alignRight: false },
-  { id: 'is_free', label: 'Is Free', alignRight: false },
-  { id: 'order', label: 'Order', alignRight: false },
+  { id: 'code', label: 'Code', alignRight: false },
+  { id: 'pos', label: 'Pos', alignRight: false },
+  { id: 'courses', label: 'Courses', alignRight: false },
   { id: '' },
 ];
 // ----------------------------------------------------------------------
@@ -162,21 +162,27 @@ export default function GlobalSetting() {
         setDeleteLoading(false);
         setGlobalSettings((prev) => prev.filter((el) => el.id !== selectedList));
         handleCloseMenu();
-        // fetchData();
+        fetchData();
       })
       .catch((error) => {
         setDeleteLoading(false);
       });
   };
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    console.log('Current Page:', value);
+  };
   const fetchData = () => {
     setLoadingData(true);
     axios
       // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
-      .get(`${process.env.REACT_APP_API_URL}admin/settings`, {
+      .get(`${process.env.REACT_APP_API_URL}admin/qr_codes?page=${currentPage}`, {
         headers: headerApi(token),
       })
       .then((res) => {
-        setGlobalSettings(res.data.data);
+        setGlobalSettings(res.data.qr_codes);
+        console.log(res.data.qr_codes);
         setLoadingData(false);
       })
       .catch((error) => {
@@ -188,8 +194,8 @@ export default function GlobalSetting() {
   };
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [currentPage]);
+  console.log(globalSettings?.data);
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
@@ -198,6 +204,7 @@ export default function GlobalSetting() {
   const handleUpdate = () => {
     setOpenUpdate(true);
   };
+
   return (
     <>
       <Helmet>
@@ -228,7 +235,7 @@ export default function GlobalSetting() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={globalSettings.length}
+                  rowCount={globalSettings?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -237,18 +244,26 @@ export default function GlobalSetting() {
                   {loadingData ? (
                     <SkeletonTabel number={4} />
                   ) : (
-                    globalSettings
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((globalSetting, index) => {
-                        return (
-                          <GlobalSettingTableRow
-                            mainPage={true}
-                            globalSetting={globalSetting}
-                            key={index}
-                            handleOpenMenu={handleOpenMenu}
-                          />
-                        );
-                      })
+                    globalSettings?.data?.map((globalSetting, index) => {
+                      return (
+                        // <GlobalSettingTableRow
+                        //   mainPage={true}
+                        //   globalSetting={globalSetting}
+                        //   key={index}
+                        //   handleOpenMenu={handleOpenMenu}
+                        //   page={page}
+                        //   setPage={setPage}
+                        // />
+                        <QrTableRow
+                          mainPage={true}
+                          element={globalSetting}
+                          key={index}
+                          handleOpenMenu={handleOpenMenu}
+                          page={page}
+                          setPage={setPage}
+                        />
+                      );
+                    })
                   )}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
@@ -283,16 +298,7 @@ export default function GlobalSetting() {
               </Table>
             </TableContainer>
           </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={globalSettings.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <Pagination count={globalSettings.last_page} color="primary" onChange={handlePageChange} page={currentPage} />
         </Card>
       </Container>
 
@@ -329,6 +335,7 @@ export default function GlobalSetting() {
         setOpen={setOpenAdd}
         setData={setGlobalSettings}
         handleCloseMenu={handleCloseMenu}
+        fetchAllData={fetchData}
       />
       <UpdateGlobalSetting
         element={selectedGlobalSetting}
