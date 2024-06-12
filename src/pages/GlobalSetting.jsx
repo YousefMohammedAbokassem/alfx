@@ -231,31 +231,39 @@ export default function GlobalSetting() {
       });
   };
   const postFilterData = () => {
-    // setLoadingData(true);
+    setLoadingData(true);
+
+    const data = {
+      course_ids: filterCourses,
+      pos_ids: filterPos,
+    };
+
     axios
-      .post(`${process.env.REACT_APP_API_URL}admin/qr_codes/filter`, {
-        headers: headerApi(token),
+      .post(`${process.env.REACT_APP_API_URL}admin/qr_codes/filter?page=${currentPage}`, data, {
+        headers: {
+          ...headerApi(token),
+          'Content-Type': 'application/json', // تأكد من تعيين نوع المحتوى إلى JSON
+        },
       })
       .then((res) => {
-        const formData = new FormData();
-        formData.append('course_ids', filterCourses);
-        formData.append('pos_ids', filterPos);
-
-        // setGlobalSettings(res.data.qr_codes);
-        console.log(res, 'dddddddddddddddddddddddddddddddddd');
-        console.log(res.data.qr_codes);
-        // setLoadingData(false);
+        setGlobalSettings(res.data.data);
+        console.log(filterCourses, 'dddddddddddddddddddddddddddddddddd');
+        console.log(filterPos, 'dddddddddddddddddddddddddddddddddd');
+        console.log(res.data.data);
+        setLoadingData(false);
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          dispatch(logoutUser());
-        }
-        // setLoadingData(false);
+        console.log(error);
+        // if (error.response.status === 401) {
+        //   dispatch(logoutUser());
+        // }
+        setLoadingData(false);
       });
   };
+
   useEffect(() => {
-    fetchData();
-  }, [currentPage]);
+    postFilterData();
+  }, [currentPage, filterCourses, filterPos]);
   useEffect(() => {
     fetchFilterData();
   }, []);
