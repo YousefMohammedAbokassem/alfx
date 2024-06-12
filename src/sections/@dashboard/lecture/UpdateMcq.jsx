@@ -51,13 +51,13 @@ const UpdateMcq = ({ open, setData, handleClose, element }) => {
       .then((res) => {
         console.log(res);
         setLoading(false);
-        setSuccessMessage("Updated Success")
+        setSuccessMessage('Updated Success');
         const updatedOptions = element.options.map((option, index) => ({
           ...option,
           text: values[`answer_${index + 1}`],
           is_correct: values.selectedAnswer === `radio_${index + 1}` ? 1 : 0,
         }));
-        handleClose()
+        handleClose();
         setData((prev) =>
           prev.map((admin) =>
             admin.id === element.id
@@ -73,11 +73,10 @@ const UpdateMcq = ({ open, setData, handleClose, element }) => {
       .catch((error) => {
         console.log(error);
         setLoading(false);
-        if(error.response){
-          setErrorMessage(error.response.data.message)
-        }
-        else{
-          setErrorMessage("Error, please try again")
+        if (error.response) {
+          setErrorMessage(error.response.data.error);
+        } else {
+          setErrorMessage('Error, please try again');
         }
       });
   };

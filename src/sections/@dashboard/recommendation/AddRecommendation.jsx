@@ -85,7 +85,7 @@ const AddRecommendation = ({ open, setOpen, setData, handleCloseMenu, id }) => {
         .catch((error) => {
           console.log(error);
           if (error.response) {
-            setErrorMessage(error.response.data.message);
+            setErrorMessage(error.response.data.error);
           } else {
             setErrorMessage('Error, please try again');
           }

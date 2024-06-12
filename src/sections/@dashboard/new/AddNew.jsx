@@ -71,7 +71,7 @@ const AddCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
         })
         .catch((error) => {
           if (error.response) {
-            setErrorMessage(error.response.data.message);
+            setErrorMessage(error.response.data.error);
           } else {
             setErrorMessage('Error, please try again');
           }

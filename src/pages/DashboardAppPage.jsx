@@ -20,41 +20,210 @@ import Chart from 'src/components/chart';
 export default function DashboardAppPage() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
 
-  const [thisYearOrder, setThisYearOrder] = useState([]);
-  const [lastYearOrder, setLastYearOrder] = useState([]);
-  const [topCtegoryKey, setCategoryKey] = useState([]);
-  const [topCtegoryValue, setCategoryValue] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [ordersOne, setOrdersOne] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [usersOne, setUsersOne] = useState([]);
+  const [dataSet, setDataSet] = useState([]);
 
-  console.log(lastYearOrder);
+  const [stat, setStat] = useState([
+    {
+      studentCount: 21,
+      coursesCount: 86,
+      qrCount: 50,
+      recommendationCount: 40,
+      month: 'Jan',
+    },
+    {
+      studentCount: 28,
+      coursesCount: 78,
+      month: 'Fev',
+      qrCount: 40,
+      recommendationCount: 50,
+    },
+    {
+      studentCount: 41,
+      coursesCount: 106,
+      month: 'Mar',
+      qrCount: 50,
+      recommendationCount: 40,
+    },
+    {
+      studentCount: 73,
+      coursesCount: 92,
+      month: 'Apr',
+      qrCount: 100,
+      recommendationCount: 70,
+    },
+    {
+      studentCount: 99,
+      coursesCount: 92,
+      qrCount: 50,
+      recommendationCount: 40,
+      month: 'May',
+    },
+    {
+      studentCount: 144,
+      coursesCount: 103,
+      qrCount: 100,
+      recommendationCount: 70,
+      month: 'June',
+    },
+    {
+      studentCount: 319,
+      coursesCount: 105,
+      qrCount: 100,
+      recommendationCount: 70,
+      month: 'July',
+    },
+    {
+      studentCount: 249,
+      coursesCount: 106,
+      qrCount: 100,
+      recommendationCount: 70,
+      month: 'Aug',
+    },
+    {
+      studentCount: 131,
+      coursesCount: 95,
+      qrCount: 100,
+      recommendationCount: 70,
+      month: 'Sept',
+    },
+    {
+      studentCount: 55,
+      coursesCount: 97,
+      qrCount: 50,
+      recommendationCount: 40,
+      month: 'Oct',
+    },
+    {
+      studentCount: 48,
+      coursesCount: 76,
+      qrCount: 50,
+      recommendationCount: 40,
+      month: 'Nov',
+    },
+    {
+      studentCount: 25,
+      coursesCount: 103,
+      qrCount: 100,
+      recommendationCount: 70,
+      month: 'Dec',
+    },
+  ]);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios
+        // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
+        .get(`${process.env.REACT_APP_API_URL}admin/statistics/${selectedYear || new Date().getFullYear()}`, {
+          headers: headerApi(token),
+        });
+      setDataSet(res.data);
+      setStat(res.data.statistics);
+      console.log(res.data);
+      setLoading(false);
+
+      // setStat(res.data.statistics);
+      // const arr = res.data.statistics;
+
+      /*   if (res.data.statistics[0] != undefined) {
+        setStat(
+          (
+            prev //[a,b] [c,d]
+          ) =>
+            prev.map((ele) => {
+              let data = {};
+              res.data.statistics.forEach((elementFromFetch) => {
+                if (ele?.month === elementFromFetch?.month) {
+                  data = elementFromFetch;
+                } else {
+                  data = ele;
+                }
+              });
+              return data;
+            })
+        );
+        setLoading(false);
+      } else {
+        setLoading(false);
+        setStat([
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Jan',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Fev',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Mar',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Apr',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'May',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'June',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'July',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Aug',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Sept',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Oct',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Nov',
+          },
+          {
+            driverCount: 0,
+            userCount: 0,
+            month: 'Dec',
+          },
+        ]);
+      } */
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch(logoutUser());
+      }
+      setLoading(false);
+    }
+    // setSelectedYear('');
+  };
+
+  // handle year
+  const [selectedYear, setSelectedYear] = useState('');
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}dashboard/charts`, {
-        headers: headerApi(token),
-      })
-      .then((res) => {
-        const valuesArray = Object.values(res.data.orders_in_two_years);
-        setThisYearOrder(valuesArray[0]);
-        setLastYearOrder(valuesArray[1]);
-        setCategoryKey(res.data.top_categories.keys);
-        setCategoryValue(res.data.top_categories.values);
-        setOrders(res.data.orders);
-        setOrdersOne(res.data.orders1);
-        setUsers(res.data.users);
-        setUsersOne(res.data.users1);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response.status === 401) {
-          dispatch(logoutUser());
-        }
-      });
-  }, [dispatch, token]);
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -75,7 +244,7 @@ export default function DashboardAppPage() {
                 <h2 className="text-lg font-semibold text-gray-700 ml-2">Students</h2>
               </div>
               <p className="">
-                Number of Students: <span className="font-bold">50</span>{' '}
+                Number of Students: <span className="font-bold">{dataSet?.studentCount}</span>{' '}
               </p>
               <div>
                 <Typography color="error.main" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -90,9 +259,9 @@ export default function DashboardAppPage() {
                 <BookIcon className="text-green-500" />
                 <h2 className="text-lg font-semibold text-gray-700 ml-2">Courses</h2>
               </div>
-                <p className="">
-                  Number of Courses: <span className="font-bold">50</span>{' '}
-                </p>
+              <p className="">
+                Number of Courses: <span className="font-bold">{dataSet?.coursesCount}</span>{' '}
+              </p>
               <>
                 <div>
                   <Typography color="error.main" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -109,10 +278,9 @@ export default function DashboardAppPage() {
                 <h2 className="text-lg font-semibold text-gray-700 ml-2">QR</h2>
               </div>
               <p className="">
-                Number of Qrs: <span className="font-bold">50</span>{' '}
+                Number of Qrs: <span className="font-bold">{dataSet?.qrCountActive + dataSet?.qrCountNonActive}</span>{' '}
                 <br />
-                active:40 {" "}
-                inactive:10
+                active:{dataSet?.qrCountActive} inactive:{dataSet?.qrCountNonActive}
               </p>
               <div>
                 <Typography color="error.main" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -128,7 +296,7 @@ export default function DashboardAppPage() {
                 <h2 className="text-md font-semibold text-gray-700 ml-2">Recommendation</h2>
               </div>
               <p className="">
-                Number of Category: <span className="font-bold">50</span>{' '}
+                Number of Category: <span className="font-bold">{dataSet?.recommendationCount}</span>{' '}
               </p>
               <div>
                 <Typography color="error.main" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -139,7 +307,14 @@ export default function DashboardAppPage() {
             </div>
           </div>
         </div>
-        <Chart />
+        <Chart
+          loading={loading}
+          setSelectedYear={setSelectedYear}
+          selectedYear={selectedYear}
+          fetchData={fetchData}
+          stat={stat}
+          year={dataSet?.year}
+        />
       </Container>
     </>
   );

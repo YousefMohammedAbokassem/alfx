@@ -19,6 +19,12 @@ import {
   TablePagination,
   CircularProgress,
   Pagination,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem as SelectMenuItem,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
@@ -62,17 +68,24 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function applySortFilter(array, comparator, query) {
+function applySortFilter(array, comparator, query, filterCourses, filterPos) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+  let filteredArray = stabilizedThis.map((el) => el[0]);
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    filteredArray = filter(filteredArray, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
-  return stabilizedThis.map((el) => el[0]);
+  if (filterCourses.length > 0) {
+    filteredArray = filter(filteredArray, (_user) => filterCourses.includes(_user.courses));
+  }
+  if (filterPos.length > 0) {
+    filteredArray = filter(filteredArray, (_user) => filterPos.includes(_user.pos));
+  }
+  return filteredArray;
 }
 
 export default function GlobalSetting() {
@@ -89,6 +102,11 @@ export default function GlobalSetting() {
   const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
+
+  const [filterCourses, setFilterCourses] = useState([]);
+  const [filterCoursesData, setFilterCoursesData] = useState([]);
+  const [filterPos, setFilterPos] = useState([]);
+  const [filterPosesData, setFilterPosesData] = useState([]);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -135,7 +153,7 @@ export default function GlobalSetting() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName, filterCourses, filterPos);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -176,7 +194,6 @@ export default function GlobalSetting() {
   const fetchData = () => {
     setLoadingData(true);
     axios
-      // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
       .get(`${process.env.REACT_APP_API_URL}admin/qr_codes?page=${currentPage}`, {
         headers: headerApi(token),
       })
@@ -192,10 +209,56 @@ export default function GlobalSetting() {
         setLoadingData(false);
       });
   };
+  const fetchFilterData = () => {
+    // setLoadingData(true);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}admin/qr_codes/get_filter`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        setFilterCoursesData(res.data.courses);
+        setFilterPosesData(res.data.poses);
+        // setGlobalSettings(res.data.qr_codes);
+        console.log(res, 'dddddddddddddddddddddddddddddddddd');
+        console.log(res.data.qr_codes);
+        // setLoadingData(false);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
+        // setLoadingData(false);
+      });
+  };
+  const postFilterData = () => {
+    // setLoadingData(true);
+    axios
+      .post(`${process.env.REACT_APP_API_URL}admin/qr_codes/filter`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        const formData = new FormData();
+        formData.append('course_ids', filterCourses);
+        formData.append('pos_ids', filterPos);
+
+        // setGlobalSettings(res.data.qr_codes);
+        console.log(res, 'dddddddddddddddddddddddddddddddddd');
+        console.log(res.data.qr_codes);
+        // setLoadingData(false);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
+        // setLoadingData(false);
+      });
+  };
   useEffect(() => {
     fetchData();
   }, [currentPage]);
-  console.log(globalSettings?.data);
+  useEffect(() => {
+    fetchFilterData();
+  }, []);
   // handle update
   const [openUpdate, setOpenUpdate] = useState(false);
 
@@ -227,6 +290,52 @@ export default function GlobalSetting() {
           </Button>
         </Stack>
 
+        <Stack direction="row" spacing={2} mb={5}>
+          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <InputLabel id="filter-courses-label">Courses</InputLabel>
+            <Select
+              labelId="filter-courses-label"
+              id="filter-courses"
+              multiple
+              value={filterCourses}
+              onChange={(e) => setFilterCourses(e.target.value)}
+              renderValue={(selected) =>
+                selected.map((value) => filterCoursesData.find((course) => course.id === value)?.name).join(', ')
+              }
+              label="Courses"
+            >
+              {filterCoursesData.map((course) => (
+                <SelectMenuItem key={course.id} value={course.id}>
+                  <Checkbox checked={filterCourses.indexOf(course.id) > -1} />
+                  <ListItemText primary={course.name} />
+                </SelectMenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <InputLabel id="filter-pos-label">Pos</InputLabel>
+            <Select
+              labelId="filter-pos-label"
+              id="filter-pos"
+              multiple
+              value={filterPos}
+              onChange={(e) => setFilterPos(e.target.value)}
+              renderValue={(selected) =>
+                selected.map((value) => filterPosesData.find((p) => p.id === value)?.name).join(', ')
+              }
+              label="Pos"
+            >
+              {filterPosesData.map((p) => (
+                <SelectMenuItem key={p.id} value={p.id}>
+                  <Checkbox checked={filterPos.indexOf(p.id) > -1} />
+                  <ListItemText primary={p.name} />
+                </SelectMenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Stack>
+
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -246,14 +355,6 @@ export default function GlobalSetting() {
                   ) : (
                     globalSettings?.data?.map((globalSetting, index) => {
                       return (
-                        // <GlobalSettingTableRow
-                        //   mainPage={true}
-                        //   globalSetting={globalSetting}
-                        //   key={index}
-                        //   handleOpenMenu={handleOpenMenu}
-                        //   page={page}
-                        //   setPage={setPage}
-                        // />
                         <QrTableRow
                           mainPage={true}
                           element={globalSetting}

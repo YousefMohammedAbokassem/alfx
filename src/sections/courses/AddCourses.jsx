@@ -67,7 +67,7 @@ const AddCourses = ({ open, setOpen, setData, fetchData }) => {
       formData.append('teacher_id', values.teacher_id);
       formData.append('has_test', values.has_test);
       formData.append('has_certificate', values.has_certificate);
-      formData.append('file', selectedFile);
+      formData.append('image', selectedFile);
 
       if (selectedFile) {
         setLoading(true);
@@ -77,6 +77,8 @@ const AddCourses = ({ open, setOpen, setData, fetchData }) => {
           })
           .then((res) => {
             setSuccessMessage('Added success');
+            console.log(selectedFile);
+            console.log(res);
             setErrorMessage('');
             setLoading(false);
             setOpen(false);

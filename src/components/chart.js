@@ -20,214 +20,13 @@ const chartSetting = {
 
 const valueFormatter = (value) => `${value}`;
 
-export default function GridDemo() {
+export default function GridDemo({ year, loading, setSelectedYear, selectedYear, stat, fetchData }) {
   const dispatch = useDispatch();
-
-  const [dataSet, setDataSet] = useState([
-    {
-      studentCount: 21,
-      coursesCount: 86,
-      qrCount: 50,
-      recommendationCount: 40,
-      month: 'Jan',
-    },
-    {
-      studentCount: 28,
-      coursesCount: 78,
-      month: 'Fev',
-      qrCount: 40,
-      recommendationCount: 50,
-    },
-    {
-      studentCount: 41,
-      coursesCount: 106,
-      month: 'Mar',
-      qrCount: 50,
-      recommendationCount: 40,
-    },
-    {
-      studentCount: 73,
-      coursesCount: 92,
-      month: 'Apr',
-      qrCount: 100,
-      recommendationCount: 70,
-    },
-    {
-      studentCount: 99,
-      coursesCount: 92,
-      qrCount: 50,
-      recommendationCount: 40,
-      month: 'May',
-    },
-    {
-      studentCount: 144,
-      coursesCount: 103,
-      qrCount: 100,
-      recommendationCount: 70,
-      month: 'June',
-    },
-    {
-      studentCount: 319,
-      coursesCount: 105,
-      qrCount: 100,
-      recommendationCount: 70,
-      month: 'July',
-    },
-    {
-      studentCount: 249,
-      coursesCount: 106,
-      qrCount: 100,
-      recommendationCount: 70,
-      month: 'Aug',
-    },
-    {
-      studentCount: 131,
-      coursesCount: 95,
-      qrCount: 100,
-      recommendationCount: 70,
-      month: 'Sept',
-    },
-    {
-      studentCount: 55,
-      coursesCount: 97,
-      qrCount: 50,
-      recommendationCount: 40,
-      month: 'Oct',
-    },
-    {
-      studentCount: 48,
-      coursesCount: 76,
-      qrCount: 50,
-      recommendationCount: 40,
-      month: 'Nov',
-    },
-    {
-      studentCount: 25,
-      coursesCount: 103,
-      qrCount: 100,
-      recommendationCount: 70,
-      month: 'Dec',
-    },
-  ]);
-
-  const [stat, setStat] = useState(dataSet);
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios
-        // .get(`${process.env.REACT_APP_API_URL}admin/categories`, {
-        .get(`${process.env.REACT_APP_API_URL}admin/statistics/${selectedYear || new Date().getFullYear()}`, {
-          headers: headerApi(token),
-        });
-      setDataSet(res.data);
-      setStat(res.data);
-      setLoading(false);
-
-      // setStat(res.data.statistics);
-      // const arr = res.data.statistics;
-
-      /*   if (res.data.statistics[0] != undefined) {
-        setStat(
-          (
-            prev //[a,b] [c,d]
-          ) =>
-            prev.map((ele) => {
-              let data = {};
-              res.data.statistics.forEach((elementFromFetch) => {
-                if (ele?.month === elementFromFetch?.month) {
-                  data = elementFromFetch;
-                } else {
-                  data = ele;
-                }
-              });
-              return data;
-            })
-        );
-        setLoading(false);
-      } else {
-        setLoading(false);
-        setStat([
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Jan',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Fev',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Mar',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Apr',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'May',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'June',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'July',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Aug',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Sept',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Oct',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Nov',
-          },
-          {
-            driverCount: 0,
-            userCount: 0,
-            month: 'Dec',
-          },
-        ]);
-      } */
-    } catch (err) {
-      if (err.response.status === 401) {
-        dispatch(logoutUser());
-      }
-      setLoading(false);
-    }
-    // setSelectedYear('');
-  };
-
-  // handle year
-  const [selectedYear, setSelectedYear] = useState('');
 
   const handleYearChange = (date) => {
     setSelectedYear(date.$y);
   };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  const [loading, setLoading] = useState(false);
+
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -368,7 +167,7 @@ export default function GridDemo() {
             <Grid item>
               <Button
                 disabled={selectedYear === '' ? true : false} // No need for this button as we're using default data
-                color="warning"
+                color="primary"
                 sx={{ height: '100%' }}
                 variant="outlined"
                 onClick={() => {
@@ -389,7 +188,7 @@ export default function GridDemo() {
                 {
                   scaleType: 'band',
                   dataKey: 'month',
-                  valueFormatter: (month, context) => `${month}\n${selectedYear|| new Date().getFullYear()}`, // Using 2024 as the year
+                  valueFormatter: (month, context) => `${month}\n${year || new Date().getFullYear()}`, // Using 2024 as the year
                 },
               ]}
               series={series}

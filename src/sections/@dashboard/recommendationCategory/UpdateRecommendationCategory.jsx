@@ -100,7 +100,7 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
       .catch((error) => {
         setLoading(false);
         if (error.response) {
-          setErrorMessage(error.response.data.message);
+          setErrorMessage(error.response.data.error);
         } else {
           setErrorMessage('Error, please try again');
         }
@@ -123,7 +123,7 @@ const UpdateTeacher = ({ open, setOpen, categories, setCategories, handleCloseMe
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>
-            <Grid item xs={12} >
+            <Grid item xs={12}>
               {/* <TextField fullWidth label="Name" required name="name" value={values.name} onChange={handleChange} /> */}
               <TextField
                 color="primary"

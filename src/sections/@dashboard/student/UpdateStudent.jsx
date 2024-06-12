@@ -95,7 +95,7 @@ const UpdateTeacher = ({ open, setOpen, students, setStudents, handleCloseMenu, 
       .catch((error) => {
         setLoading(false);
         if (error.response) {
-          setErrorMessage(error.response.data.message);
+          setErrorMessage(error.response.data.error);
         } else {
           setErrorMessage('Error, please try again');
         }
