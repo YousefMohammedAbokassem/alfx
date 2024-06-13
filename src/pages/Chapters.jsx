@@ -250,26 +250,6 @@ const Chapters = () => {
         chapterId={selectedList}
       />
 
-      <Container sx={{ mt: 6 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Qr Code
-          </Typography>
-          <Button onClick={() => setOpenAddQr(true)} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Qr
-          </Button>
-        </Stack>
-      </Container>
-
-      <QrComp
-        QrLoading={QrLoading}
-        setQrLoading={setQrLoading}
-        qrCode={qrCode}
-        setQrCode={setQrCode}
-        selectedId={selectedId}
-        setSelectedId={setSelectedId}
-      />
-      <AddQr open={openAddQr} setOpen={setOpenAddQr} setData={setQrCode} />
 
     </>
   );
