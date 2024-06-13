@@ -57,9 +57,7 @@ const AddAds = ({ open, setOpen, setData }) => {
         console.log(res);
         setLoading(false);
         setData((prev) => [...prev, res.data.ad]);
-        setOpen(false);
-        setErrorMessage(null);
-        setSuccessMessage(null);
+        handleClose();
       })
       .catch((error) => {
         console.log(error);

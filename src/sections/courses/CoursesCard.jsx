@@ -19,8 +19,8 @@ const CoursesCard = ({ element, handleDelete, handleUpdate, setSelectedId, mainP
       <iframe
         width="350"
         height="315"
-        src={`https://www.youtube.com/embed/${customDecrypt(element.introduction_video)}?si=7erLKeQtKJ0cHYn3`}
-        // src={`${embedUrl}?si=7erLKeQtKJ0cHYn3`}
+        // src={`https://www.youtube.com/embed/${customDecrypt(element.introduction_video)}?si=7erLKeQtKJ0cHYn3`}
+        src={`${embedUrl}?si=7erLKeQtKJ0cHYn3`}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
