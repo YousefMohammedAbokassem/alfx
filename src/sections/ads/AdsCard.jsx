@@ -22,7 +22,7 @@ const AdsCard = ({ element, setOpenDelete, setSelectedElement, setOpenUpdate }) 
       <Card sx={{ width: 345 }}>
         <CardMedia
           sx={{ height: 240, cursor: 'pointer' }}
-          image={`${process.env.REACT_APP_API_URL_IMAGE}${element.image}`}
+          image={`${process.env.REACT_APP_API_URL_IMAGE}${element.file}`}
           title="Advertise"
           onClick={onClick}
         />

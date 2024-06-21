@@ -44,7 +44,7 @@ const AddAds = ({ open, setOpen, setData }) => {
     setLoading(true);
     const formData = new FormData();
 
-    formData.append('image', selecteFile);
+    formData.append('file', selecteFile);
     formData.append('url', url);
     formData.append('title', title);
     formData.append('body', body);

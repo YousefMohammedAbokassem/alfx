@@ -48,7 +48,7 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
     formData.append('url', url);
     formData.append('title', title);
     formData.append('body', body);
-    formData.append('image', selecteFile);
+    formData.append('file', selecteFile);
     formData.append('id', selectedElement.id);
 
     axios
@@ -59,12 +59,13 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
         console.log(res);
         handleClose();
         setLoading(false);
+        setSelectFile(null);
         setData((prev) =>
           prev.map((ads) =>
             ads.id === selectedElement.id
               ? {
                   ...ads,
-                  image: selecteFile,
+                  file: res.data.ad.file,
                   url: res.data.ad.url,
                   title: title,
                   body: body,
