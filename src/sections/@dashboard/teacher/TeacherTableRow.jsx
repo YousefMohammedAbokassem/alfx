@@ -20,7 +20,7 @@ const TeacherTableRow = ({ teacher, handleOpenMenu, mainPage }) => {
       onClick={() => handleNavigate(teacher.id)}
     >
       <TableCell component="th" scope="row" padding="none">
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack direction="row" alignItems="center" spacing={2} ml={1}>
           <Avatar alt={teacher.name} src={`${process.env.REACT_APP_API_URL_IMAGE}${teacher.image}`} />
           <Typography variant="subtitle2" noWrap>
             {teacher.name}

@@ -7,8 +7,15 @@ const AdminTableRow = ({element, handleOpenMenu}) => {
     <>
       <TableRow hover tabIndex={-1} role="checkbox">
         <TableCell component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={element.first_name} src={element.image.startsWith('blob') ? element.image : `${process.env.REACT_APP_API_URL_IMAGE}${element.image}`} />
+          <Stack direction="row" alignItems="center" spacing={2} ml={1}>
+            <Avatar
+              alt={element.first_name}
+              src={
+                element.image.startsWith('blob')
+                  ? element.image
+                  : `${process.env.REACT_APP_API_URL_IMAGE}${element.image}`
+              }
+            />
             <Typography variant="subtitle2" noWrap>
               {element.name}
             </Typography>

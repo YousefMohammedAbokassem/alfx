@@ -19,6 +19,10 @@ import {
   TablePagination,
   CircularProgress,
 } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 // components
 import Iconify from '../components/iconify';
 import { useTheme } from '@mui/material/styles';
@@ -43,6 +47,9 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
   { id: 'phone', label: 'Phone', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'device_id', label: 'Device id', alignRight: false },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -153,6 +160,24 @@ export default function Student() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [selectedList, setSelectedList] = useState('');
+  const handleDeleteAdmin = () => {
+    setDeleteLoading(true);
+    axios
+      .get(`${process.env.REACT_APP_API_URL}admin/users/delete/${selectedList}`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        setDeleteLoading(false);
+        setStudents((prev) => prev.filter((el) => el.id !== selectedList));
+        handleCloseMenu();
+      })
+      .catch((error) => {
+        setDeleteLoading(false);
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
+        }
+      });
+  };
   const fetchData = () => {
     setLoadingData(true);
     axios
@@ -184,7 +209,20 @@ export default function Student() {
     setOpenUpdate(true);
   };
   const theme = useTheme();
+  const [openNotification, setOpenNotification] = useState(false);
 
+  /* notification */
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenNotification(false);
+  };
   return (
     <>
       <Helmet>
@@ -196,6 +234,9 @@ export default function Student() {
           <Typography variant="h4" gutterBottom>
             Students
           </Typography>
+          <Button onClick={() => setOpenAdd(true)} variant="contained" startIcon={<SendIcon />} color={'primary'}>
+            Send Notification
+          </Button>
         </Stack>
 
         <Card>
@@ -271,6 +312,60 @@ export default function Student() {
           />
         </Card>
       </Container>
+
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 'auto',
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={handleUpdate}>
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+          Update Info
+        </MenuItem>
+
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleDeleteAdmin}>
+          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+          {deleteLoading ? <CircularProgress size={20} /> : 'Delete'}
+        </MenuItem>
+      </Popover>
+      <AddStudent
+        setOpenNotification={setOpenNotification}
+        open={OpenAdd}
+        setOpen={setOpenAdd}
+        setData={setStudents}
+        handleCloseMenu={handleCloseMenu}
+      />
+      <UpdateStudent
+        element={selectedStudent}
+        open={openUpdate}
+        setOpen={setOpenUpdate}
+        setStudents={setStudents}
+        students={students}
+        handleCloseMenu={handleCloseMenu}
+      />
+      <Snackbar
+        open={openNotification}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleClose} severity="primary" variant="filled" sx={{ width: '100%' }}>
+          The notification has sent to all users
+        </Alert>
+      </Snackbar>
     </>
   );
 }

@@ -19,7 +19,7 @@ import { headerApi } from 'src/utils/headerApi';
 
 const rule = ['admin', 'super'];
 
-const AddStudent = ({ open, setOpen, setData, handleCloseMenu }) => {
+const AddStudent = ({ open, setOpen, setData, handleCloseMenu, setOpenNotification }) => {
   const { token } = useSelector((state) => state.auth);
 
   const [loading, setLoading] = useState(false);
@@ -48,23 +48,26 @@ const AddStudent = ({ open, setOpen, setData, handleCloseMenu }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      title: '',
+      body: '',
     },
     onSubmit: (values) => {
       setLoading(true);
       const formData = new FormData();
-      formData.append('name', values.name);
+      formData.append('title', values.title);
+      formData.append('body', values.body);
 
       axios
-        .post(`${process.env.REACT_APP_API_URL}admin/student/store`, formData, {
+        .post(`${process.env.REACT_APP_API_URL}admin/notifications/send_to_all_users`, formData, {
           headers: headerApi(token),
         })
         .then((res) => {
           console.log(res);
           setLoading(false);
-          setSuccessMessage('Added Success');
-          setData((prev) => [...prev, res.data.data]);
+          // setSuccessMessage('Added Success');
+          // setData((prev) => [...prev, res.data.data]);
           handleClose();
+          setOpenNotification(true);
         })
         .catch((error) => {
           if (error.response) {
@@ -89,19 +92,30 @@ const AddStudent = ({ open, setOpen, setData, handleCloseMenu }) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color={'primary.main'}>
-          {'Add Student'}
+          {'Send Notifications'}
         </DialogTitle>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            <Grid container spacing={3} sx={{ marginTop: '20px' }}>
+            <Grid container spacing={2} sx={{ marginTop: '20px' }}>
               <Grid item xs={12}>
                 <TextField
                   color="primary"
                   fullWidth
-                  label="Name"
-                  name="name"
+                  label="Title"
+                  name="title"
                   required
-                  value={formik.values.name}
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  color="primary"
+                  fullWidth
+                  label="Body"
+                  name="body"
+                  required
+                  value={formik.values.body}
                   onChange={formik.handleChange}
                 />
               </Grid>

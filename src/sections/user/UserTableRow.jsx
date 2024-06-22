@@ -7,7 +7,7 @@ const UserTableRow = ({ element, handleOpenMenu }) => {
     <>
       <TableRow sx={{ cursor: 'pointer' }}>
         <TableCell component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
+          <Stack direction="row" alignItems="center" spacing={2} ml={1}>
             <Avatar alt={element.name} src={`${process.env.REACT_APP_API_URL_IMAGE}${element.image}`} />
             <Typography variant="subtitle2" noWrap>
               {element.name}

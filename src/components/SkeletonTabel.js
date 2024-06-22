@@ -1,6 +1,5 @@
 // number of tabel cell depend on number props
 
-
 import { Skeleton, Stack, TableCell, TableRow } from '@mui/material';
 import React from 'react';
 
@@ -22,8 +21,8 @@ const SkeletonTable = ({ number }) => {
       {[1, 2, 3].map((element, index) => (
         <TableRow key={index}>
           <TableCell component="th" scope="row" padding="none">
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Skeleton variant="circular" sx={{marginLeft: "10px"}} width={40} height={40} />
+            <Stack direction="row" alignItems="center" spacing={2} sx={{ ml: 1}}>
+              <Skeleton variant="circular" width={40} height={40} />
               <Skeleton variant="rectangular" width={100} height={30} />
             </Stack>
           </TableCell>

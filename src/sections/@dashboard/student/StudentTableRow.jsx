@@ -33,6 +33,21 @@ const StudentTableRow = ({ student, handleOpenMenu, mainPage }) => {
           {student?.phone}
         </Typography>
       </TableCell>
+      <TableCell component="th" scope="row">
+        <Typography variant="subtitle2" noWrap>
+          {student?.blocked == 1 ? 'Available' : 'Unavailable'}
+        </Typography>
+      </TableCell>
+      <TableCell component="th" scope="row">
+        <Typography variant="subtitle2" noWrap>
+          {student?.device_id || 'null'}
+        </Typography>
+      </TableCell>
+      <TableCell align="right">
+        <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, student, student.id)}>
+          <Iconify icon={'eva:more-vertical-fill'} />
+        </IconButton>
+      </TableCell>
     </TableRow>
   );
 };

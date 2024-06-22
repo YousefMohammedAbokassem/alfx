@@ -170,15 +170,16 @@ export default function GlobalSetting() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [selectedList, setSelectedList] = useState('');
+  console.log(globalSettings);
   const handleDeleteAdmin = () => {
     setDeleteLoading(true);
     axios
-      .delete(`${process.env.REACT_APP_API_URL}admin/settings/${selectedList}`, {
+      .get(`${process.env.REACT_APP_API_URL}admin/qr_codes/delete/${selectedList?.id}`, {
         headers: headerApi(token),
       })
       .then((res) => {
         setDeleteLoading(false);
-        setGlobalSettings((prev) => prev.filter((el) => el.id !== selectedList));
+        setGlobalSettings((prev) => prev?.data.filter((el) => el.id !== selectedList?.id));
         handleCloseMenu();
         fetchData();
       })
