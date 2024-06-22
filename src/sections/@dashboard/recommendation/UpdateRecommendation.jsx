@@ -146,6 +146,7 @@ const UpdateRecommendation = ({
                 color="primary"
                 fullWidth
                 label="Description"
+                multiline
                 name="description"
                 required
                 value={values.description}

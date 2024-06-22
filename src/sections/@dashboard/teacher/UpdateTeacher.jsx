@@ -164,7 +164,7 @@ const UpdateTeacher = ({ open, setOpen, setData, handleCloseMenu, element }) => 
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Update Admin Info'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Update Teacher Info'}</DialogTitle>
         <DialogContent>
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>
             <Grid item xs={12} md={6}>
@@ -196,8 +196,10 @@ const UpdateTeacher = ({ open, setOpen, setData, handleCloseMenu, element }) => 
               <TextField
                 fullWidth
                 label="Description"
+                multiline
                 required
                 name="description"
+                multiline
                 value={values.description}
                 onChange={handleChange}
               />

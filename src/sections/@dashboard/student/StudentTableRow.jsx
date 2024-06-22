@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import Iconify from 'src/components/iconify';
 
 const StudentTableRow = ({ student, handleOpenMenu, mainPage }) => {
-  const handleNavigate = (id) => {
-    if (mainPage) {
-      navigate(`/dashboard/SpecialStudent?id=${id}`);
-    }
-  };
+  // const handleNavigate = (id) => {
+  //   if (mainPage) {
+  //     navigate(`/dashboard/SpecialStudent?id=${id}`);
+  //   }
+  // };
   const navigate = useNavigate();
   return (
     <TableRow
@@ -16,18 +16,22 @@ const StudentTableRow = ({ student, handleOpenMenu, mainPage }) => {
       tabIndex={-1}
       role="checkbox"
       sx={{ cursor: mainPage ? 'pointer' : '' }}
-      onClick={() => handleNavigate(student.id)}
+      // onClick={() => handleNavigate(student.id)}
     >
       <TableCell component="th" scope="row">
         <Typography variant="subtitle2" noWrap>
           {student?.name}
         </Typography>
       </TableCell>
-
-      <TableCell align="right">
-        <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, student, student.id)}>
-          <Iconify icon={'eva:more-vertical-fill'} />
-        </IconButton>
+      <TableCell component="th" scope="row">
+        <Typography variant="subtitle2" noWrap>
+          {student?.email}
+        </Typography>
+      </TableCell>
+      <TableCell component="th" scope="row">
+        <Typography variant="subtitle2" noWrap>
+          {student?.phone}
+        </Typography>
       </TableCell>
     </TableRow>
   );

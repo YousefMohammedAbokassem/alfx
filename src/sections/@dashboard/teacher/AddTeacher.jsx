@@ -16,8 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { headerApi } from 'src/utils/headerApi';
 
-
-const rule = ["admin", "super"]
+const rule = ['admin', 'super'];
 
 const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
   const { token } = useSelector((state) => state.auth);
@@ -28,7 +27,7 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
 
   const handleClose = () => {
     setOpen(false);
-    handleCloseMenu()
+    handleCloseMenu();
     formik.resetForm();
     setErrorMessage('');
     setSuccessMessage('');
@@ -55,7 +54,7 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
       youtube: '',
       specialization: '',
       description: '',
-    },  
+    },
     onSubmit: (values) => {
       setLoading(true);
       const formData = new FormData();
@@ -69,8 +68,8 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
       formData.append('file', selecteFile);
 
       for (var pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-    }
+        console.log(pair[0] + ', ' + pair[1]);
+      }
 
       axios
         .post(`${process.env.REACT_APP_API_URL}admin/teachers/create`, formData, {
@@ -81,14 +80,13 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
           console.log(res);
           setSuccessMessage('Added Success');
           setData((prev) => [...prev, res.data.teacher]);
-          handleClose()
+          handleClose();
         })
         .catch((error) => {
           console.log(error);
-          if(error.response){
-            setErrorMessage(error.response.data.error)
-          }else{
-
+          if (error.response) {
+            setErrorMessage(error.response.data.error);
+          } else {
             setErrorMessage('Error, please try again');
           }
           setLoading(false);
@@ -96,21 +94,21 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
     },
   });
 
-  const [city, setCity] = useState([])
+  const [city, setCity] = useState([]);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}admin/cities`, {
-      headers:  headerApi(token)
-      
-    })
-    .then(res => {
-      console.log(res)
-      setCity(res.data.cities)
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }, [])
+    axios
+      .get(`${process.env.REACT_APP_API_URL}admin/cities`, {
+        headers: headerApi(token),
+      })
+      .then((res) => {
+        console.log(res);
+        setCity(res.data.cities);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -155,7 +153,9 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
                   onChange={formik.handleChange}
                 >
                   {city.map((element, index) => (
-                    <MenuItem key={index} value={element.id}>{element.name}</MenuItem>
+                    <MenuItem key={index} value={element.id}>
+                      {element.name}
+                    </MenuItem>
                   ))}
                 </TextField>
               </Grid>
@@ -173,6 +173,7 @@ const AddTeacher = ({ open, setOpen, setData, handleCloseMenu }) => {
                 <TextField
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}

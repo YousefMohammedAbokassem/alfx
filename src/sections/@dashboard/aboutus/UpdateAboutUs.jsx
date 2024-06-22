@@ -174,7 +174,7 @@ const UpdateAboutUs = ({ open, setOpen, aboutUs, setAboutUs, handleCloseMenu }) 
               <TextField
                 color="primary"
                 fullWidth
-                label="Description"
+                label="Description" multiline
                 name="description"
                 required
                 value={values.description}

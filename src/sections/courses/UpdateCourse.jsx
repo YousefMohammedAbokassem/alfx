@@ -108,16 +108,16 @@ const UpdateCourse = ({ element, open, handleClose, onUpdateSuccess }) => {
       });
   }, [token]);
 
-  // handle file 
+  // handle file
 
-      //handle file 
-      const fileInputRef = useRef(null)
+  //handle file
+  const fileInputRef = useRef(null);
 
-      const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(null);
 
-      const handleSelectFile = (e) => {
-        setSelectedFile(e.target.files[0])
-      }
+  const handleSelectFile = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
 
   return (
     <>
@@ -145,6 +145,7 @@ const UpdateCourse = ({ element, open, handleClose, onUpdateSuccess }) => {
                 <TextField
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}

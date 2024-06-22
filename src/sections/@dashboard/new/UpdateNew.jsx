@@ -152,6 +152,7 @@ const UpdateNew = ({ open, setOpen, news, setNews, handleCloseMenu, element }) =
                 color="primary"
                 fullWidth
                 label="Description"
+                multiline
                 required
                 name="description"
                 value={values.description}

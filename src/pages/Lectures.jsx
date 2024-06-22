@@ -113,52 +113,65 @@ const Lectures = () => {
           {loading ? (
             <SkeletonCopm />
           ) : (
-            lectures.map((element, index) => (
-              <Card key={index} sx={{ maxWidth: 345 }}>
-                <iframe
-                  width="350"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${customDecrypt(element.video)}?si=7erLKeQtKJ0cHYn3`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {element.name}
-                  </Typography>
-                  <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {element.description}
+            lectures.map((element, index) => {
+            console.log(element)
+              const decryptedVideoUrl = customDecrypt(element.video);
+              // استخراج معرف الفيديو ووقت البدء باستخدام تعبيرات منتظمة
+              const videoIdMatch = decryptedVideoUrl.match(/v=([^&]+)/);
+              const startTimeMatch = decryptedVideoUrl.match(/t=(\d+)s/);
+
+              const videoId = videoIdMatch ? videoIdMatch[1] : null;
+              const startTime = startTimeMatch ? startTimeMatch[1] : '0'; // تعيين الوقت الافتراضي إلى 0 إذا لم يكن هناك وقت بدء
+
+              // إنشاء رابط التضمين
+              const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}`;
+              return (
+                <Card key={index} sx={{ maxWidth: 345 }}>
+                  <iframe
+                    width="350"
+                    height="315"
+                    src={embedUrl}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {element.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Duration: {element.duration} min
-                    </Typography>
-                  </Stack>
-                  {element.file && element.file.url && (
-                    <a href={`${process.env.REACT_APP_API_URL_IMAGE}${element.file.url}`} download target="_blank">
-                      Download file
-                    </a>
-                  )}
-                </CardContent>
-                <CardActions sx={{ justifyContent: 'space-between', display: 'flex' }}>
-                  <Stack>
-                    <Button size="small" onClick={() => navigate(`/dashboard/courses/lectures/mcq/${element.id}`)}>
-                      Details
-                    </Button>
-                  </Stack>
-                  <Stack direction="row">
-                    <Button size="small" onClick={(event) => handleUpdate(event, element.id, element)}>
-                      Update
-                    </Button>
-                    <LoadingButton loading={deleteLoading} size="small" onClick={() => handleDelete(element.id)}>
-                      Delete
-                    </LoadingButton>
-                  </Stack>
-                </CardActions>
-              </Card>
-            ))
+                    <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {element.description}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Duration: {element.duration} min
+                      </Typography>
+                    </Stack>
+                    {element.file && element.file.url && (
+                      <a href={`${process.env.REACT_APP_API_URL_IMAGE}${element.file.url}`} download target="_blank">
+                        Download file
+                      </a>
+                    )}
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'space-between', display: 'flex' }}>
+                    <Stack>
+                      <Button size="small" onClick={() => navigate(`/dashboard/courses/lectures/mcq/${element.id}`)}>
+                        Details
+                      </Button>
+                    </Stack>
+                    <Stack direction="row">
+                      <Button size="small" onClick={(event) => handleUpdate(event, element.id, element)}>
+                        Update
+                      </Button>
+                      <LoadingButton loading={deleteLoading} size="small" onClick={() => handleDelete(element.id)}>
+                        Delete
+                      </LoadingButton>
+                    </Stack>
+                  </CardActions>
+                </Card>
+              );
+            })
           )}
         </div>
       </Container>

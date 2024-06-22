@@ -116,6 +116,7 @@ const AddRecommendation = ({ open, setOpen, setData, handleCloseMenu, id }) => {
                   color="primary"
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}

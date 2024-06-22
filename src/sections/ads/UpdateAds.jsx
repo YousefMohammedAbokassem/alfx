@@ -85,8 +85,6 @@ const UpdateAds = ({ open, handleClose, selectedElement, setData }) => {
         }
       });
   };
-
-  console.log(errorMessage);
   return (
     <>
       <Dialog

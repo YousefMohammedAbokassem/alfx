@@ -42,7 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const Chapters = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
   const { id } = useParams();
@@ -108,46 +108,22 @@ const Chapters = () => {
   const [selectedElement, setSelectedElement] = useState({});
 
   //start  handle qr
-
-  const [qrCode, setQrCode] = useState([]);
-  const [QrLoading, setQrLoading] = useState(false);
-  const [openAddQr, setOpenAddQr] = useState(false);
-
-
-
-  useEffect(() => {
-    setQrLoading(true);
-    axios
-      .get(`${process.env.REACT_APP_API_URL}admin/qr_codes/course/${id}`, {
-        headers: headerApi(token),
-      })
-      .then((res) => {
-        setQrCode(res.data.qr_codes);
-        setQrLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        if(error.response.status === 401){
-          dispatch(logoutUser())
-        }
-        setQrLoading(false);
-      });
-  }, [token, id]);
-
   useEffect(() => {
     setLoadingData(true);
     axios
       .get(`${process.env.REACT_APP_API_URL}admin/courses/${id}`, {
-            headers: headerApi(token)
+        headers: headerApi(token),
       })
       .then((res) => {
+        console.log(res);
+
         setChapters(res.data.chapters);
         setLoadingData(false);
       })
       .catch((error) => {
         console.log(error);
-        if(error.response.status === 401){
-          dispatch(logoutUser())
+        if (error.response.status === 401) {
+          dispatch(logoutUser());
         }
         setLoadingData(false);
       });
@@ -249,8 +225,6 @@ const Chapters = () => {
         setOpen={setOpenUpdate}
         chapterId={selectedList}
       />
-
-
     </>
   );
 };

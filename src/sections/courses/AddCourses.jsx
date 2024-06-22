@@ -77,7 +77,6 @@ const AddCourses = ({ open, setOpen, setData, fetchData }) => {
           })
           .then((res) => {
             setSuccessMessage('Added success');
-            console.log(selectedFile);
             console.log(res);
             setErrorMessage('');
             setLoading(false);
@@ -140,6 +139,7 @@ const AddCourses = ({ open, setOpen, setData, fetchData }) => {
                 <TextField
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}

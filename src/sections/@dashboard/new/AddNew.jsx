@@ -113,6 +113,7 @@ const AddCategory = ({ open, setOpen, setData, handleCloseMenu }) => {
                   color="primary"
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}

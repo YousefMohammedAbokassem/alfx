@@ -34,7 +34,8 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
       formData.append('duration', values.duration);
       formData.append('chapter_id', id);
       formData.append('id', selectedId);
-      formData.append('file', selectedFile);
+      // formData.append('file', selectedFile);
+
       axios
         .post(`${process.env.REACT_APP_API_URL}admin/courses/lectures/update`, formData, {
           headers: headerApi(token),
@@ -43,6 +44,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
           setErrorMessage('');
           setLoading(false);
           handleClose();
+
           setData((prev) =>
             prev.map((admin) =>
               admin.id === element.id
@@ -57,6 +59,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
                 : admin
             )
           );
+          formik.resetForm();
         })
         .catch((error) => {
           console.log(error);
@@ -100,7 +103,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
         aria-describedby="alert-dialog-description"
       >
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle id="alert-dialog-title">{'Add Teacher'}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{'Update Teacher'}</DialogTitle>
           <DialogContent>
             <Grid container spacing={3} sx={{ marginTop: '20px' }}>
               <Grid item xs={12} md={6}>
@@ -117,6 +120,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
                 <TextField
                   fullWidth
                   label="Description"
+                  multiline
                   name="description"
                   required
                   value={formik.values.description}
@@ -153,7 +157,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
                   onChange={formik.handleChange}
                 />
               </Grid>
-              <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
+              {/* <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
                 <label htmlFor="file">
                   <Button variant="contained" onClick={() => fileInputRef.current.click()}>
                     File
@@ -166,7 +170,7 @@ const UpdateLecture = ({ open, setData, handleClose, element, selectedId }) => {
                   ref={fileInputRef}
                   onChange={handleSelectFile}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
           </DialogContent>
           <DialogActions>
